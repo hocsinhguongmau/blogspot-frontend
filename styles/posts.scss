@@ -1,0 +1,54 @@
+.posts {
+  @apply pb-20 pt-6;
+  &__title {
+    @apply text-5xl font-bold text-center;
+    @extend .maven;
+  }
+  &__wrapper {
+    @apply grid grid-cols-4 gap-10 pt-10;
+  }
+  &__item {
+    @apply text-center pt-6;
+    &__image {
+      @extend .hover-scale;
+    }
+    &__tag {
+      @apply hidden;
+    }
+    &__title {
+      @apply text-xl font-bold mt-6 leading-8;
+      @extend .text-hover;
+    }
+    &__description {
+      @apply mt-4 leading-7 mb-10;
+    }
+  }
+}
+.breadcrumbs {
+  @apply mx-10 p-14 bg-cover bg-center relative;
+  @extend .maven;
+  &:before {
+    @apply absolute top-0 left-0 w-full h-full block bg-black opacity-30;
+    content: '';
+  }
+  &__content {
+    @apply relative z-10 p-14 bg-white opacity-90 w-2/3;
+  }
+}
+.post {
+  &__category {
+    @apply text-red-500 tracking-widest uppercase text-sm;
+  }
+  &__tag {
+    @apply ml-2 tracking-widest uppercase text-sm;
+  }
+  &__title {
+    @apply text-4xl font-bold mt-8;
+  }
+  &__date {
+    @apply text-sm mt-8;
+  }
+  &__content {
+    @apply pt-10;
+  }
+}

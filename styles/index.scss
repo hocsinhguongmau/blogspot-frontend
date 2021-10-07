@@ -1,0 +1,137 @@
+.new-posts,
+.popular-posts {
+  @apply relative;
+  .container {
+    @apply flex;
+  }
+  &__col {
+    @apply w-1/2 mx-10 z-10;
+  }
+  .latest-post,
+  .popular-post {
+    &__image {
+      @extend .hover-scale;
+    }
+    &__tag {
+      @apply text-red-500 mt-8 uppercase text-sm tracking-widest;
+      @extend .maven;
+    }
+    &__title {
+      @apply text-4xl font-bold mt-4;
+      @extend .maven;
+      @extend .text-hover;
+    }
+    &__description {
+      @apply leading-7 mt-8;
+    }
+  }
+  .recent-post {
+    @apply flex  mt-8;
+    &:first-child {
+      @apply mt-0;
+    }
+    &__image {
+      @apply w-2/5;
+      img {
+        @extend .hover-scale;
+      }
+    }
+    &__text {
+      @apply w-3/5 pl-10;
+    }
+    &__tag {
+      @apply text-red-500 text-xs uppercase tracking-widest;
+      @extend .maven;
+    }
+    &__title {
+      @apply text-2xl font-semibold mt-4;
+      @extend .text-hover;
+      @extend .maven;
+    }
+    &__description {
+      @apply mt-8 leading-7;
+    }
+  }
+}
+.recent-posts {
+  @apply pt-20 pb-20 relative mt-10;
+  .container {
+    @apply relative z-10;
+  }
+  &:before {
+    content: '';
+    @apply absolute z-0  top-0 left-0 h-full w-11/12 bg-gray-100;
+  }
+
+  &__title {
+    @apply text-5xl font-bold capitalize float-left;
+    @extend .maven;
+  }
+  &__category {
+    @apply float-right text-sm uppercase text-red-500 mt-4 pr-10;
+    @extend .maven;
+  }
+  &__wrapper {
+    @apply clear-both grid gap-8 grid-cols-4 w-11/12;
+  }
+  &__item {
+    @apply mt-4;
+    &__image {
+      @extend .hover-scale;
+    }
+    &__tag {
+      @apply text-red-500 uppercase text-sm tracking-widest mt-4;
+      @extend .maven;
+    }
+    &__title {
+      @apply text-xl font-semibold mt-4;
+      @extend .maven;
+      @extend .text-hover;
+    }
+    &__description {
+      @apply leading-7 mt-2;
+    }
+  }
+  .button {
+    @apply mx-auto block mt-20;
+  }
+}
+
+.popular-posts {
+  @apply mt-16 pt-20 pb-20;
+  .container {
+    @apply pr-6;
+  }
+  &__title {
+    @apply pt-10 text-5xl font-bold;
+    @extend .maven;
+  }
+  &__description {
+    @apply my-8;
+  }
+  &__col {
+    @apply w-2/5 mx-0;
+    &:first-child {
+      @apply w-3/5 mr-20;
+    }
+  }
+  &:before {
+    background-color: #5ecbdc;
+    content: '';
+    height: 675px;
+    @apply absolute z-0  top-0 left-0 w-11/12;
+  }
+  .recent-post {
+    &__tag {
+      @extend .text-default;
+      &:hover {
+        @apply text-gray-500;
+      }
+    }
+  }
+  .popular-post {
+    &__tag {
+      color: #5ecbdc;
+    }
+  }
+}

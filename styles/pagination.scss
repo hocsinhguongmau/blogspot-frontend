@@ -1,0 +1,19 @@
+.pagination {
+  ul {
+    @apply flex mt-20 justify-center;
+    li {
+      a {
+        @apply inline-block  px-3 py-2  text-sm transition-all duration-300;
+        @extend .maven;
+        &:hover {
+          @apply bg-gray-200;
+        }
+      }
+      &.active {
+        a {
+          @apply bg-red-500;
+        }
+      }
+    }
+  }
+}

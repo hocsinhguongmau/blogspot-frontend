@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'fonts';
+@import 'header';
+@import 'footer';
+@import 'index';
+@import 'posts';
+@import 'pagination';
+
+$default-color: #1b1f25;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  @extend .text-default;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.maven {
+  font-family: 'Maven Pro';
+}
+
+.container {
+  @apply mx-auto;
+}
+
+.text-default {
+  color: $default-color;
+}
+
+.bg-default {
+  background-color: $default-color;
+}
+
+.text-hover {
+  @apply transition-all duration-200;
+  &:hover {
+    @apply text-red-500;
+  }
+}
+
+.container {
+  @apply w-5/6;
+}
+
+.button {
+  @apply uppercase font-light inline-block bg-red-500 transition-all duration-300 text-white text-lg px-6 py-2 tracking-widest;
+  &:hover {
+    background-color: $default-color;
+  }
+}
+
+.hover-scale {
+  @apply transition-all duration-300;
+  &:hover {
+    @apply scale-110;
+  }
+}

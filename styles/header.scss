@@ -1,0 +1,46 @@
+.header {
+  @apply px-10;
+  &__top {
+    @apply py-5 border-b-2 border-gray-100 flex justify-between;
+  }
+  &__bottom {
+    @apply my-6;
+  }
+}
+
+.search {
+  input {
+    @apply border-b-2 border-gray-200 py-1;
+    &:focus {
+      @apply outline-none;
+    }
+  }
+
+  button {
+    @apply pl-2 text-xl text-gray-400 align-top mt-2;
+  }
+}
+
+.social {
+  @apply flex align-top mt-2;
+
+  li {
+    @apply mx-2 text-xl;
+    a {
+      @apply text-gray-400;
+      @extend .text-hover;
+    }
+  }
+}
+
+.navigation {
+  @apply flex justify-center;
+  li {
+    @apply mx-4;
+    a {
+      @apply uppercase text-xs font-medium;
+      @extend .maven;
+      @extend .text-hover;
+    }
+  }
+}
