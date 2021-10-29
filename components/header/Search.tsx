@@ -13,7 +13,7 @@ export default function Search(): ReactElement {
     <div className='search'>
       <form onSubmit={handleSearch}>
         <input
-          placeholder='Search for...'
+          placeholder='Search'
           type='text'
           onChange={(e) => setSearch(e.target.value)}
         />

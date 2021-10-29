@@ -8,7 +8,7 @@ export default function Footer({}: Props): ReactElement {
     <footer className='footer'>
       <div className='container'>
         <div className='footer__col'>
-          <Link href='/'>
+          <Link href=''>
             <a className='footer__logo'>
               <Image src='/images/logo.svg' alt='Logo' width={68} height={34} />
             </a>

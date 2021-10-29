@@ -1,29 +1,8 @@
 import type { NextPage } from 'next'
-import Image from 'next/image'
 import Head from 'next/head'
-import Header from '../components/header/Header'
-import Footer from '../components/footer/Footer'
-import Layout from '../components/Layout'
 import NewPosts from '../components/main/NewPosts'
 import RecentPosts from '../components/main/RecentPosts'
 import PopularPosts from '../components/main/PopularPosts'
-
-// import sanityClient from '@sanity/client'
-
-// const client = sanityClient({
-//   projectId: 'd1b9sptx',
-//   dataset: 'production',
-//   apiVersion: '2021-03-25', // use current UTC date - see "specifying API version"!
-//   token: '', // or leave blank for unauthenticated usage
-//   useCdn: true, // `false` if you want to ensure fresh data
-// })
-// const query = '*[_type == "post"]'
-
-// client.fetch(query).then((posts: any) => {
-//   posts.forEach((post: any) => {
-//     console.log(`${post.title})`)
-//   })
-// })
 
 const Home: NextPage = () => {
   return (

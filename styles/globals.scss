@@ -27,10 +27,6 @@ body {
   font-family: 'Maven Pro';
 }
 
-.container {
-  @apply mx-auto;
-}
-
 .text-default {
   color: $default-color;
 }
@@ -47,7 +43,7 @@ body {
 }
 
 .container {
-  @apply w-5/6;
+  @apply mx-auto w-full px-4 md:px-8 lg:w-5/6 lg:px-0;
 }
 
 .button {

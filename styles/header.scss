@@ -1,5 +1,5 @@
 .header {
-  @apply px-10;
+  @apply px-4 md:px-10;
   &__top {
     @apply py-5 border-b-2 border-gray-100 flex justify-between;
   }
@@ -22,7 +22,7 @@
 }
 
 .social {
-  @apply flex align-top mt-2;
+  @apply hidden md:flex align-top mt-2;
 
   li {
     @apply mx-2 text-xl;
@@ -34,13 +34,38 @@
 }
 
 .navigation {
-  @apply flex justify-center;
-  li {
-    @apply mx-4;
-    a {
-      @apply uppercase text-xs font-medium;
-      @extend .maven;
-      @extend .text-hover;
+  @apply text-center pb-2;
+  ul {
+    li {
+      @apply inline-block mx-4;
+      a {
+        @apply uppercase text-xs font-medium;
+        @extend .maven;
+        @extend .text-hover;
+      }
+    }
+  }
+}
+.navigation-mobile {
+  &__button {
+    @apply mx-auto text-4xl text-red-500;
+  }
+  &__panel {
+    @apply hidden;
+    &.active {
+      @apply block fixed w-full h-full bg-gray-900 top-0 left-0 z-50 text-gray-200 text-center tracking-widest flex flex-col justify-center;
+    }
+    .button-close {
+      @apply absolute top-5 right-5 text-gray-300 text-4xl z-10;
+    }
+    ul {
+      @apply justify-center md:grid md:grid-cols-3 md:gap-4 mt-6 md:mt-10;
+      li {
+        @apply mx-4 block mt-3;
+        a {
+          @apply uppercase  text-lg font-thin;
+        }
+      }
     }
   }
 }

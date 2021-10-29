@@ -1,18 +1,17 @@
 .footer {
   @extend .bg-default;
-  @apply py-16 mt-20;
+  @apply py-12 md:py-16 mt-10 md:mt-20 text-center md:text-left;
   .container {
-    @apply flex justify-between;
+    @apply md:grid md:grid-cols-3 gap-2 lg:grid-cols-6 lg:gap-4;
   }
   &__logo {
     @apply mb-4 inline-block;
   }
   &__title {
-    @apply text-white text-xl font-bold mb-6 mt-2 capitalize;
+    @apply text-white text-xl font-bold mb-6 mt-8 md:mt-2 capitalize;
     @extend .maven;
   }
   &__col {
-    @apply w-1/6;
     li {
       @apply my-2;
       a {

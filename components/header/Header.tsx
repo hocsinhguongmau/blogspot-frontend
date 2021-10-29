@@ -10,7 +10,7 @@ export default function Header(): ReactElement {
     <header className='header'>
       <div className='header__top'>
         <Search />
-        <Link href=''>
+        <Link href='/'>
           <a>
             <Image src='/images/logo.svg' alt='Logo' width={68} height={34} />
           </a>
