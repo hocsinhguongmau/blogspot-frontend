@@ -14,72 +14,72 @@ export default function Navigation({}: Props): ReactElement {
         <div className='navigation'>
           <ul>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>ALL ARTICLES</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>COLLECTIONS</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>CSS</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>FREELANCE</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>INSPIRATION</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>JAVASCRIPT</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>LEARN</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>MARKETING</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>MOBILE UI</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>PHOTOSHOP</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>TYPOGRAPHY</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>UX DESIGN</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>WEB DESIGN</a>
               </Link>
             </li>
             <li>
-              <Link href=''>
+              <Link href='/'>
                 <a>WORDPRESS</a>
               </Link>
             </li>
@@ -94,7 +94,7 @@ export default function Navigation({}: Props): ReactElement {
           </button>
           <div
             className={`navigation-mobile__panel ${openMenu ? 'active' : ''}`}>
-            <Link href=''>
+            <Link href='/'>
               <a>
                 <Image src='/images/logo.svg' height={35} width={70} />
               </a>
@@ -104,72 +104,72 @@ export default function Navigation({}: Props): ReactElement {
             </button>
             <ul>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>ALL ARTICLES</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>COLLECTIONS</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>CSS</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>FREELANCE</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>INSPIRATION</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>JAVASCRIPT</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>LEARN</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>MARKETING</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>MOBILE UI</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>PHOTOSHOP</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>TYPOGRAPHY</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>UX DESIGN</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>WEB DESIGN</a>
                 </Link>
               </li>
               <li>
-                <Link href=''>
+                <Link href='/'>
                   <a>WORDPRESS</a>
                 </Link>
               </li>

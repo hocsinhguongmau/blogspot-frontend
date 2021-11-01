@@ -8,28 +8,28 @@ export default function Social({}: Props): ReactElement {
   return (
     <ul className='social'>
       <li>
-        <Link href=''>
+        <Link href='/'>
           <a>
             <FaFacebook />
           </a>
         </Link>
       </li>
       <li>
-        <Link href=''>
+        <Link href='/'>
           <a>
             <FaFacebook />
           </a>
         </Link>
       </li>
       <li>
-        <Link href=''>
+        <Link href='/'>
           <a>
             <FaFacebook />
           </a>
         </Link>
       </li>
       <li>
-        <Link href=''>
+        <Link href='/'>
           <a>
             <FaFacebook />
           </a>

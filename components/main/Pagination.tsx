@@ -7,47 +7,47 @@ export default function Pagination({}: Props): ReactElement {
     <div className='pagination'>
       <ul>
         <li className='active'>
-          <Link href=''>
+          <Link href='/'>
             <a>1</a>
           </Link>
         </li>
         <li>
-          <Link href=''>
+          <Link href='/'>
             <a>2</a>
           </Link>
         </li>
         <li>
-          <Link href=''>
+          <Link href='/'>
             <a>3</a>
           </Link>
         </li>
         <li>
-          <Link href=''>
+          <Link href='/'>
             <a>4</a>
           </Link>
         </li>
         <li>
-          <Link href=''>
+          <Link href='/'>
             <a>5</a>
           </Link>
         </li>
         <li>
-          <Link href=''>
+          <Link href='/'>
             <a>6</a>
           </Link>
         </li>
         <li>
-          <Link href=''>
+          <Link href='/'>
             <a>7</a>
           </Link>
         </li>
         <li>
-          <Link href=''>
+          <Link href='/'>
             <a>Next</a>
           </Link>
         </li>
         <li>
-          <Link href=''>
+          <Link href='/'>
             <a>Last</a>
           </Link>
         </li>

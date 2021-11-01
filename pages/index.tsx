@@ -1,10 +1,41 @@
-import type { NextPage } from 'next'
+import React from 'react'
+
+import type { GetStaticProps } from 'next'
+import { useQuery, UseQueryResult } from 'react-query'
 import Head from 'next/head'
 import NewPosts from '../components/main/NewPosts'
 import RecentPosts from '../components/main/RecentPosts'
 import PopularPosts from '../components/main/PopularPosts'
 
-const Home: NextPage = () => {
+import { client, mainPosts } from '../queries'
+import { PostType } from '../lib/interfaces/PostsType'
+
+export interface InitialDataProps {
+  posts: PostType[]
+}
+
+const getPosts = async (): Promise<PostType[]> => await client.fetch(mainPosts)
+
+const Home = ({ posts }: InitialDataProps) => {
+  const { isLoading, isError, error }: UseQueryResult<PostType[], Error> =
+    useQuery<PostType[], Error>('posts', getPosts, { initialData: posts })
+
+  if (isLoading) {
+    return (
+      <div>
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div>
+        <p>{error?.message}</p>
+      </div>
+    )
+  }
+
   return (
     <>
       <Head>
@@ -13,12 +44,20 @@ const Home: NextPage = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <main>
-        <NewPosts />
-        <RecentPosts />
-        <PopularPosts />
+        <NewPosts posts={posts.slice(0, 4)} />
+        <RecentPosts posts={posts.slice(4, 12)} />
+        {/* <PopularPosts posts={posts.slice(0, 4)} /> */}
       </main>
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps = async (): Promise<{
+  props: { posts: PostType[] }
+}> => {
+  const posts = await getPosts()
+
+  return { props: { posts: posts } }
 }
 
 export default Home
