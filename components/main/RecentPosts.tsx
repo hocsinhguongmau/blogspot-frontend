@@ -1,8 +1,13 @@
 import React, { ReactElement } from 'react'
 import Link from 'next/link'
 import Post from './Post'
-import { InitialDataProps } from '../../pages'
-export default function RecentPosts({ posts }: InitialDataProps): ReactElement {
+import { PostType } from '../../lib/interfaces/PostsType'
+
+type AppProps = {
+  posts: PostType[]
+}
+
+export default function RecentPosts({ posts }: AppProps): ReactElement {
   return (
     <section className='recent-posts'>
       <div className='container'>
@@ -11,7 +16,7 @@ export default function RecentPosts({ posts }: InitialDataProps): ReactElement {
           <a className='recent-posts__category'>All articles</a>
         </Link>
         <div className='recent-posts__wrapper'>
-          {posts.map((post) => (
+          {posts.map((post: PostType) => (
             <Post
               key={post.id}
               classes='recent-posts__item'

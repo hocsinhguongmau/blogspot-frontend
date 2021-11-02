@@ -11,14 +11,21 @@ import { client, mainPosts } from '../queries'
 import { PostType } from '../lib/interfaces/PostsType'
 
 export interface InitialDataProps {
-  posts: PostType[]
+  posts: PostsType
 }
 
-const getPosts = async (): Promise<PostType[]> => await client.fetch(mainPosts)
+interface PostsType {
+  mainPosts: PostType[]
+  popularPosts: PostType[]
+}
+
+const getPosts = async (): Promise<PostsType> => await client.fetch(mainPosts)
 
 const Home = ({ posts }: InitialDataProps) => {
-  const { isLoading, isError, error }: UseQueryResult<PostType[], Error> =
-    useQuery<PostType[], Error>('posts', getPosts, { initialData: posts })
+  const { isLoading, isError, error }: UseQueryResult<PostsType, Error> =
+    useQuery<PostsType, Error>('posts', getPosts, {
+      initialData: posts,
+    })
 
   if (isLoading) {
     return (
@@ -44,16 +51,16 @@ const Home = ({ posts }: InitialDataProps) => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <main>
-        <NewPosts posts={posts.slice(0, 4)} />
-        <RecentPosts posts={posts.slice(4, 12)} />
-        {/* <PopularPosts posts={posts.slice(0, 4)} /> */}
+        <NewPosts posts={posts.mainPosts.slice(0, 4)} />
+        <RecentPosts posts={posts.mainPosts.slice(4, 12)} />
+        {/* <PopularPosts posts={posts.popularPosts} /> */}
       </main>
     </>
   )
 }
 
 export const getStaticProps: GetStaticProps = async (): Promise<{
-  props: { posts: PostType[] }
+  props: { posts: PostsType }
 }> => {
   const posts = await getPosts()
 

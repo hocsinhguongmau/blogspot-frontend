@@ -8,4 +8,6 @@ export const client = sanityClient({
   useCdn: true,
 })
 export const mainPosts =
-  '*[_type == "post"] | order(_createdAt desc)[0...8]{"id":_id,title,"createdAt":_createdAt,"author":author->name,"categories": categories[]{ "title": ^->title, "slug": ^->slug.current },"tags":tags[]{ "title": ^->title, "slug": ^->slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}'
+  '{"mainPosts":*[_type == "post"] | order(_createdAt desc)[0...8]{"id":_id,title,"createdAt":_createdAt,"author":author->name,"categories": categories[]{ "title": ^->title, "slug": ^->slug.current },"tags":tags[]{ "title": ^->title, "slug": ^->slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body},"popularPosts":*[_type == "post"][0...4]}'
+
+export const categories = '*[_type == "category"]{title,"slug":slug.current}'
