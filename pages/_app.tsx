@@ -18,12 +18,12 @@ function MyApp({ Component, pageProps }: AppProps) {
       }),
   )
   return (
-    <Layout>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <Layout>
         <ReactQueryDevtools initialIsOpen={false} />
         <Component {...pageProps} />
-      </QueryClientProvider>
-    </Layout>
+      </Layout>
+    </QueryClientProvider>
   )
 }
 export default MyApp

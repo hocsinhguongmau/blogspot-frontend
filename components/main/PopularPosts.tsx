@@ -1,8 +1,13 @@
 import React, { ReactElement } from 'react'
+import { PostType } from '../../lib/interfaces/PostsType'
 import Post from './Post'
-interface Props {}
 
-export default function PopularPosts({}: Props): ReactElement {
+type AppProps = {
+  posts: PostType[]
+}
+
+export default function PopularPosts({ posts }: AppProps): ReactElement {
+  console.log(posts)
   return (
     <section className='popular-posts'>
       <div className='container'>
@@ -11,12 +16,17 @@ export default function PopularPosts({}: Props): ReactElement {
           <p className='popular-posts__description'>
             The most popular posts on 1st Web Designer.
           </p>
-          <Post classes='popular-post' size={[150, 100]} />
+          <Post post={posts[0]} classes='popular-post' size={[150, 100]} />
         </div>
         <div className='popular-posts__col'>
-          <Post classes='recent-post' size={[100, 100]} />
-          <Post classes='recent-post' size={[100, 100]} />
-          <Post classes='recent-post' size={[100, 100]} />
+          {posts.slice(1).map((post: PostType) => (
+            <Post
+              key={post.id}
+              classes='recent-post'
+              size={[200, 150]}
+              post={post}
+            />
+          ))}
         </div>
       </div>
     </section>

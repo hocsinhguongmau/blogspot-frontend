@@ -2,19 +2,31 @@ export interface PostType {
   createdAt: string
   id: string
   title: string
+  description: string
   body: Array<object>
-  categories: category[]
+  categories: categoryType[]
   imageUrl: string
   slug: string
-  tags: tag[]
+  tags: tagType[]
+  author: authorType
 }
 
-export type tag = {
+export type authorType = {
+  slug: string
+  name: string
+}
+
+export type tagType = {
   slug: string
   title: string
 }
 
-export type category = {
+export type categoryType = {
   slug: string
   title: string
+}
+
+export interface PostsType {
+  mainPosts: PostType[]
+  popularPosts: PostType[]
 }

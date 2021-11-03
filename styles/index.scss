@@ -43,6 +43,12 @@
     &__tag {
       @apply text-red-500 text-xs uppercase tracking-widest mt-6 md:mt-0;
       @extend .maven;
+      span {
+        @apply ml-4 inline-block;
+        &:first-child {
+          @apply ml-0;
+        }
+      }
     }
     &__title {
       @apply text-2xl font-semibold mt-4;
@@ -51,6 +57,7 @@
     }
     &__description {
       @apply mt-8 leading-7;
+      @extend .ellipsis-three;
     }
   }
 }
@@ -111,9 +118,9 @@
     @apply my-4 lg:my-8;
   }
   &__col {
-    @apply lg:w-2/5 mx-0;
+    @apply lg:w-1/2 mx-0;
     &:first-child {
-      @apply lg:w-3/5 mr-20;
+      @apply lg:w-1/2 mr-20;
     }
   }
   &:before {
@@ -134,6 +141,12 @@
       @extend .text-default;
       &:hover {
         @apply text-gray-500;
+      }
+      span {
+        @apply ml-4 inline-block;
+        &:first-child {
+          @apply ml-0;
+        }
       }
     }
   }

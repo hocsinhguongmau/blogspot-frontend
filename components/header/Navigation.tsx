@@ -4,86 +4,47 @@ import { CgClose } from '@react-icons/all-files/cg/CgClose'
 import { GiHamburgerMenu } from '@react-icons/all-files/gi/GiHamburgerMenu'
 import Link from 'next/link'
 import Image from 'next/image'
-interface Props {}
+import { getCategory } from '../../queries'
+import { useQuery, UseQueryResult } from 'react-query'
+import { categoryType } from '../../lib/interfaces/PostsType'
 
-export default function Navigation({}: Props): ReactElement {
+const Links = (): ReactElement => {
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+  }: UseQueryResult<categoryType[], Error> = useQuery<categoryType[], Error>(
+    'links',
+    getCategory,
+  )
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+  if (isError) {
+    return <div>Error! {error?.message}</div>
+  }
+
+  return (
+    <ul>
+      {data?.map((link) => (
+        <li key={link.slug}>
+          <Link href={`/categories/${link.slug}`}>
+            <a>{link.title}</a>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+export default function Navigation(): ReactElement {
   const [openMenu, setOpenMenu] = useState<boolean>(false)
   return (
     <>
       {isDesktop ? (
         <div className='navigation'>
-          <ul>
-            <li>
-              <Link href='/'>
-                <a>ALL ARTICLES</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>COLLECTIONS</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>CSS</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>FREELANCE</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>INSPIRATION</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>JAVASCRIPT</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>LEARN</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>MARKETING</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>MOBILE UI</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>PHOTOSHOP</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>TYPOGRAPHY</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>UX DESIGN</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>WEB DESIGN</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/'>
-                <a>WORDPRESS</a>
-              </Link>
-            </li>
-          </ul>
+          <Links />
         </div>
       ) : (
         <div className='navigation-mobile'>
@@ -102,78 +63,7 @@ export default function Navigation({}: Props): ReactElement {
             <button className='button-close' onClick={() => setOpenMenu(false)}>
               <CgClose />
             </button>
-            <ul>
-              <li>
-                <Link href='/'>
-                  <a>ALL ARTICLES</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>COLLECTIONS</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>CSS</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>FREELANCE</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>INSPIRATION</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>JAVASCRIPT</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>LEARN</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>MARKETING</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>MOBILE UI</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>PHOTOSHOP</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>TYPOGRAPHY</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>UX DESIGN</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>WEB DESIGN</a>
-                </Link>
-              </li>
-              <li>
-                <Link href='/'>
-                  <a>WORDPRESS</a>
-                </Link>
-              </li>
-            </ul>
+            <Links />
           </div>
         </div>
       )}

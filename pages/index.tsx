@@ -7,19 +7,12 @@ import NewPosts from '../components/main/NewPosts'
 import RecentPosts from '../components/main/RecentPosts'
 import PopularPosts from '../components/main/PopularPosts'
 
-import { client, mainPosts } from '../queries'
-import { PostType } from '../lib/interfaces/PostsType'
+import { getPosts } from '../queries'
+import { PostsType } from '../lib/interfaces/PostsType'
 
 export interface InitialDataProps {
   posts: PostsType
 }
-
-interface PostsType {
-  mainPosts: PostType[]
-  popularPosts: PostType[]
-}
-
-const getPosts = async (): Promise<PostsType> => await client.fetch(mainPosts)
 
 const Home = ({ posts }: InitialDataProps) => {
   const { isLoading, isError, error }: UseQueryResult<PostsType, Error> =
@@ -53,7 +46,7 @@ const Home = ({ posts }: InitialDataProps) => {
       <main>
         <NewPosts posts={posts.mainPosts.slice(0, 4)} />
         <RecentPosts posts={posts.mainPosts.slice(4, 12)} />
-        {/* <PopularPosts posts={posts.popularPosts} /> */}
+        <PopularPosts posts={posts.popularPosts} />
       </main>
     </>
   )
