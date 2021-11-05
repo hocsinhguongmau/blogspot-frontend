@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useNextSanityImage } from 'next-sanity-image'
 import Link from 'next/link'
 import { PostType } from '../../lib/interfaces/PostsType'
-import { configuredSanityClient } from '../../queries'
+import { client } from '../../queries'
 
 interface Props {
   classes: string
@@ -18,7 +18,7 @@ export default function Post({
   button,
   post,
 }: Props): ReactElement {
-  const imageProps = useNextSanityImage(configuredSanityClient, post.imageUrl)
+  const imageProps = useNextSanityImage(client, post.imageUrl)
 
   return (
     <div className={classes}>

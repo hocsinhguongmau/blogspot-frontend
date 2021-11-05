@@ -49,6 +49,34 @@
     @apply text-sm mt-4 md:mt-8;
   }
   &__content {
-    @apply pt-10 break-words;
+    @apply pt-10 break-words leading-7 max-w-4xl mx-auto;
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+      @apply pt-4;
+    }
+    figure {
+      @apply mt-4;
+      img {
+        @apply mx-auto;
+      }
+    }
+    h1 {
+      @apply text-4xl;
+    }
+    h2 {
+      @apply text-3xl;
+    }
+    h3 {
+      @apply text-2xl;
+    }
+    h4 {
+      @apply text-xl;
+    }
+    a {
+      @apply text-red-500;
+    }
   }
 }

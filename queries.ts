@@ -8,12 +8,6 @@ export const client = sanityClient({
   token: '',
   useCdn: true,
 })
-export const configuredSanityClient = sanityClient({
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_DATASET,
-  apiVersion: process.env.NEXT_PUBLIC_API_VERSION,
-  useCdn: true,
-})
 
 export const mainPosts =
   '{"mainPosts":*[_type == "post"] | order(_createdAt desc)[0...8]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,slug},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body},"popularPosts":*[_type == "post"]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,slug},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[0...4]}'
