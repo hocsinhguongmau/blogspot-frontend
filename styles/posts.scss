@@ -77,6 +77,12 @@
     }
     a {
       @apply text-red-500;
+      &:hover {
+        @apply text-green-500;
+      }
+    }
+    .youtube-iframe {
+      @apply mx-auto;
     }
   }
 }

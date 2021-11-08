@@ -2,21 +2,36 @@ import React, { ReactElement } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 const BlockContent = require('@sanity/block-content-to-react')
-import Post from '../../components/main/Post'
-import { GetStaticPaths, GetStaticProps } from 'next'
-import { client, getSinglePost } from '../../queries'
+import RelatedPost from '../../components/main/RelatedPost'
+import getYouTubeId from 'get-youtube-id'
+import YouTube from 'react-youtube'
+
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from 'next'
+import { client, getAllSlugs, getSinglePost } from '../../queries'
 import { useQuery, UseQueryResult } from 'react-query'
-import { PostType } from '../../lib/interfaces/PostsType'
+import { PostType, RelatedPostType } from '../../lib/interfaces/PostsType'
 import { useRouter } from 'next/dist/client/router'
 import { useNextSanityImage } from 'next-sanity-image'
 
 interface AppProps {
   post: PostType | undefined
 }
-
+type linksType = {
+  mark: { blank: boolean; href: string }
+  children: HTMLElement
+}
+type alignmentType = {
+  mark: { alignment: 'left' | 'right' | 'center' }
+  children: HTMLElement
+}
 const serializers = {
   marks: {
-    link: ({ mark, children }: any) => {
+    link: ({ mark, children }: linksType) => {
       const { blank, href } = mark
       return blank ? (
         <a href={href} target='_blank' rel='noopener'>
@@ -26,7 +41,7 @@ const serializers = {
         <a href={href}>{children}</a>
       )
     },
-    textAlignment: ({ mark, children }: any) => {
+    textAlignment: ({ mark, children }: alignmentType) => {
       if (mark.alignment === 'right') {
         return (
           <span
@@ -51,6 +66,17 @@ const serializers = {
         )
       } else {
         return <span>{children}</span>
+      }
+    },
+  },
+  types: {
+    youtube: ({ node }: any) => {
+      const { url } = node
+      const id: string | null = getYouTubeId(url)
+      if (id) {
+        return <YouTube videoId={id} className='youtube-iframe' />
+      } else {
+        return null
       }
     },
   },
@@ -142,10 +168,16 @@ const PostPage = ({ post }: AppProps) => {
             <div className='container'>
               <h2 className='recent-posts__title'>Related posts</h2>
               <div className='recent-posts__wrapper'>
-                {/* <Post classes='recent-posts__item' size={[150, 100]} />
-            <Post classes='recent-posts__item' size={[150, 100]} />
-            <Post classes='recent-posts__item' size={[150, 100]} />
-            <Post classes='recent-posts__item' size={[150, 100]} /> */}
+                {post.categories.map((category) =>
+                  category.relatedPosts.map((post: RelatedPostType) => (
+                    <RelatedPost
+                      post={post}
+                      key={post.id}
+                      classes='recent-posts__item'
+                      size={[150, 100]}
+                    />
+                  )),
+                )}
               </div>
             </div>
           </section>
@@ -160,19 +192,39 @@ type slugType = {
     slug: string
   }
 }
-export const getStaticProps = async ({
-  params,
-}: slugType): Promise<{
-  props: { post: PostType | undefined }
-}> => {
+export const getStaticProps: GetStaticProps = async (
+  context: GetStaticPropsContext,
+) => {
+  const { params } = context
+  const emptyPost: PostType = {
+    title: 'Post not found',
+    createdAt: '',
+    id: '0',
+    description: '',
+    body: [],
+    categories: [],
+    imageUrl: '',
+    slug: '',
+    tags: [],
+    author: { slug: '', name: '' },
+  }
+  if (!params?.slug) {
+    return { props: { post: emptyPost } }
+  }
   const post = await getSinglePost(params.slug)
   return { props: { post: post } }
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths = async () => {
+  const posts = await getAllSlugs()
+  const paths = posts.map((post) => ({
+    params: {
+      slug: post.slug,
+    },
+  }))
   return {
-    paths: [], //indicates that no page needs be created at build time
-    fallback: 'blocking', //indicates the type of fallback
+    paths,
+    fallback: false,
   }
 }
 

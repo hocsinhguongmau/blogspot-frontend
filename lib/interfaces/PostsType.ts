@@ -11,6 +11,13 @@ export interface PostType {
   author: authorType
 }
 
+export type RelatedPostType = {
+  id: string
+  title: string
+  slug: string
+  imageUrl: string
+}
+
 export type authorType = {
   slug: string
   name: string
@@ -24,6 +31,7 @@ export type tagType = {
 export type categoryType = {
   slug: string
   title: string
+  relatedPosts: RelatedPostType[]
 }
 
 export interface PostsType {

@@ -7,7 +7,6 @@ type AppProps = {
 }
 
 export default function PopularPosts({ posts }: AppProps): ReactElement {
-  console.log(posts)
   return (
     <section className='popular-posts'>
       <div className='container'>

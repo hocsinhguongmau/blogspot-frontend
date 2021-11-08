@@ -19,8 +19,33 @@ export const getSinglePost = async (
 ): Promise<PostType | undefined> => {
   if (typeof pageSlug === 'string') {
     const url = encodeURIComponent(pageSlug)
-    const query = `*[ _type == "post" && slug.current == "${url}" ][0]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}`
+    const query = `*[ _type == "post" && slug.current == "${url}" ][0]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current,"relatedPosts": *[_type == "post" && (^.slug.current) in categories[]->slug.current && !(slug.current=="${url}")][0...4]{"id":_id,title,"imageUrl": mainImage.asset._ref,"slug": slug.current}},"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}`
 
+    return await client.fetch(query)
+  } else {
+    return
+  }
+}
+
+export const getPostsByCategory = async (
+  category: string,
+  start: number,
+  end: number,
+): Promise<PostsType | undefined> => {
+  if (typeof category === 'string') {
+    const url = encodeURIComponent(category)
+    const query = `*[_type == "post" && ${category} in categories[]->slug.current][0]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}]`
+    return await client.fetch(query)
+  } else {
+    return
+  }
+}
+export const getPostsByTag = async (
+  tag: string,
+): Promise<PostsType | undefined> => {
+  if (typeof tag === 'string') {
+    const url = encodeURIComponent(tag)
+    const query = `*[_type == "post" && ${tag} in tags[]->slug.current][0]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}`
     return await client.fetch(query)
   } else {
     return
@@ -32,3 +57,9 @@ export const getPosts = async (): Promise<PostsType> =>
 
 export const getCategory = async (): Promise<categoryType[]> =>
   await client.fetch(categories)
+
+type IdType = {
+  slug: string
+}
+export const getAllSlugs = async (): Promise<IdType[]> =>
+  await client.fetch(`*[_type == "post"]{"slug": slug.current}`)
