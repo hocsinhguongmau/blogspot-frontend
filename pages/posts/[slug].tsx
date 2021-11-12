@@ -17,6 +17,7 @@ import { useQuery, UseQueryResult } from 'react-query'
 import { PostType, RelatedPostType } from '../../lib/interfaces/PostsType'
 import { useRouter } from 'next/dist/client/router'
 import { useNextSanityImage } from 'next-sanity-image'
+import NotFound from '../../components/main/NotFound'
 
 interface AppProps {
   post: PostType | undefined
@@ -113,7 +114,7 @@ const PostPage = ({ post }: AppProps) => {
   }
 
   if (!post) {
-    return <div>Not found</div>
+    return <NotFound />
   } else {
     const imageProps = useNextSanityImage(client, post.imageUrl)
     return (
@@ -196,35 +197,20 @@ export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext,
 ) => {
   const { params } = context
-  const emptyPost: PostType = {
-    title: 'Post not found',
-    createdAt: '',
-    id: '0',
-    description: '',
-    body: [],
-    categories: [],
-    imageUrl: '',
-    slug: '',
-    tags: [],
-    author: { slug: '', name: '' },
-  }
-  if (!params?.slug) {
-    return { props: { post: emptyPost } }
-  }
-  const post = await getSinglePost(params.slug)
+  const post = await getSinglePost(params?.slug)
   return { props: { post: post } }
 }
 
 export const getStaticPaths = async () => {
   const posts = await getAllSlugs()
-  const paths = posts.map((post) => ({
+  const paths = posts.slice(0, 100).map((post) => ({
     params: {
       slug: post.slug,
     },
   }))
   return {
     paths,
-    fallback: false,
+    fallback: true,
   }
 }
 

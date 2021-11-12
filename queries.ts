@@ -34,11 +34,19 @@ export const getPostsByCategory = async (
 ): Promise<PostsType | undefined> => {
   if (typeof category === 'string') {
     const url = encodeURIComponent(category)
-    const query = `*[_type == "post" && ${category} in categories[]->slug.current][0]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}]`
+    const query = `{"posts":*[_type == "post" && ${url} in categories[]->slug.current][0]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}],"statics":}}`
     return await client.fetch(query)
   } else {
     return
   }
+}
+
+export const getAllPosts = async (
+  start: number,
+  end: number,
+): Promise<PostType[] | undefined> => {
+  const query = `{"allPosts":*[_type == "post"]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}],"statics":{"numberOfPosts":count(*[_type == "post"])}}`
+  return await client.fetch(query)
 }
 export const getPostsByTag = async (
   tag: string,
