@@ -131,7 +131,7 @@ const PostPage = ({ post }: AppProps) => {
                 <span className='post__category'>
                   {post.categories.map((category) => (
                     <Link
-                      href={`/categories/${category.slug}`}
+                      href={`/category/${category.slug}`}
                       key={category.slug}>
                       <a>{category.title}</a>
                     </Link>
@@ -139,7 +139,7 @@ const PostPage = ({ post }: AppProps) => {
                 </span>
                 <span className='post__tag'>
                   {post.tags.map((tag) => (
-                    <Link href={`/tags/${tag.slug}`} key={tag.slug}>
+                    <Link href={`/tag/${tag.slug}`} key={tag.slug}>
                       <a>#{tag.title}</a>
                     </Link>
                   ))}

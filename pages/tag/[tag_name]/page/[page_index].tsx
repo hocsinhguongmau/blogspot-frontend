@@ -1,12 +1,12 @@
 import React from 'react'
 import Head from 'next/head'
-import { GetStaticProps, GetStaticPropsContext } from 'next'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
-import { PostType } from '../../../lib/interfaces/PostsType'
-import { getCategory, getPostsByCategory } from '../../../queries'
-import Post from '../../../components/main/Post'
-import Pagination from '../../../components/main/Pagination'
+import { getPostsByTag } from '../../../../queries'
+import Pagination from '../../../../components/main/Pagination'
+import Post from '../../../../components/main/Post'
+import { PostType } from '../../../../lib/interfaces/PostsType'
 
 const postsPerPage = 4
 const page = '1'
@@ -19,9 +19,17 @@ interface Props {
   }
 }
 
-const CategoryPage = ({ posts }: Props) => {
+let start: number,
+  end: number = 0
+
+const TagPage = ({ posts }: Props) => {
   const router = useRouter()
-  const category = router.query.category_name
+  const tag = router.query.tag_name
+  const page: string | string[] | undefined = router.query.page_index
+  if (typeof page === 'string') {
+    start = (parseInt(page) - 1) * postsPerPage
+    end = parseInt(page) * postsPerPage - 1
+  }
   const {
     isLoading,
     isError,
@@ -29,7 +37,7 @@ const CategoryPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => getPostsByCategory(category, 0, postsPerPage), {
+  >('posts', () => getPostsByTag(tag, start, end), {
     keepPreviousData: true,
     initialData: posts.posts,
   })
@@ -51,7 +59,7 @@ const CategoryPage = ({ posts }: Props) => {
   }
 
   if (!posts) {
-    return <>No post found for {category}</>
+    return <>No post found for {tag}</>
   } else {
     return (
       <>
@@ -79,9 +87,7 @@ const CategoryPage = ({ posts }: Props) => {
                 numberOfPosts={numberOfPosts}
                 postsPerPage={postsPerPage}
                 maxPages={5}
-                urlName={
-                  typeof category === 'string' ? `category/${category}` : ''
-                }
+                urlName={typeof tag === 'string' ? `tag/${tag}` : ''}
               />
             ) : (
               ''
@@ -93,25 +99,18 @@ const CategoryPage = ({ posts }: Props) => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({
-  params,
-}: GetStaticPropsContext) => {
-  const posts = await getPostsByCategory(params?.category_name, 0, postsPerPage)
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+}: GetServerSidePropsContext) => {
+  const page: string | string[] | undefined = query.page_index
+  if (typeof page === 'string') {
+    start = (parseInt(page) - 1) * postsPerPage
+    end = parseInt(page) * postsPerPage
+  }
+  console.log(query)
+  const posts = await getPostsByTag(query?.tag_name, start, end)
 
   return { props: { posts: posts } }
 }
 
-export const getStaticPaths = async () => {
-  const categories = await getCategory()
-  const paths = categories.map((category) => ({
-    params: {
-      category_name: category.slug,
-    },
-  }))
-  return {
-    paths,
-    fallback: true,
-  }
-}
-
-export default CategoryPage
+export default TagPage

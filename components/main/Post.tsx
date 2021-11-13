@@ -39,7 +39,7 @@ export default function Post({
         <p className={`${classes}__tag`}>
           {post.tags.map((tag?) => (
             <span key={tag.slug}>
-              <Link href={`/tags/${tag.slug}`}>
+              <Link href={`/tag/${tag.slug}`}>
                 <a>{tag.title}</a>
               </Link>
             </span>
@@ -53,7 +53,7 @@ export default function Post({
         <p className={`${classes}__description`}>{post.description}</p>
       </div>
       {button ? (
-        <Link href='/posts'>
+        <Link href={`/posts/${post.slug}`}>
           <a className='button'>Read more</a>
         </Link>
       ) : null}

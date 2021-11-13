@@ -29,7 +29,7 @@ const Links = (): ReactElement => {
     <ul>
       {data?.map((link) => (
         <li key={link.slug}>
-          <Link href={`/categories/${link.slug}`}>
+          <Link href={`/category/${link.slug}`}>
             <a>{link.title}</a>
           </Link>
         </li>

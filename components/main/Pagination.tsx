@@ -6,6 +6,7 @@ type Props = {
   numberOfPosts: number
   postsPerPage: number
   maxPages: number
+  urlName: string
 }
 
 export default function Pagination({
@@ -13,6 +14,7 @@ export default function Pagination({
   numberOfPosts,
   postsPerPage,
   maxPages,
+  urlName,
 }: Props): ReactElement {
   let totalPages = Math.ceil(numberOfPosts / postsPerPage)
 
@@ -49,8 +51,8 @@ export default function Pagination({
 
   const isFirst = currentPage === 1
   const isLast = currentPage === totalPages
-  const prevPage = `/posts/page/${currentPage - 1}`
-  const nextPage = `/posts/page/${currentPage + 1}`
+  const prevPage = `/${urlName}/page/${currentPage - 1}`
+  const nextPage = `/${urlName}/page/${currentPage + 1}`
   // calculate start and end item indexes
   let startIndex = (currentPage - 1) * postsPerPage
   let endIndex = Math.min(startIndex + postsPerPage - 1, numberOfPosts - 1)
@@ -66,13 +68,13 @@ export default function Pagination({
         {!isFirst && (
           <>
             <li>
-              <Link href={`/posts/`}>
+              <Link href={`/${urlName}/`}>
                 <a>First</a>
               </Link>
             </li>
             {currentPage === 2 ? (
               <li>
-                <Link href='/posts'>
+                <Link href={`/${urlName}`}>
                   <a>Previous</a>
                 </Link>
               </li>
@@ -90,7 +92,7 @@ export default function Pagination({
           if (page === 1) {
             return (
               <li key={page} className={page === currentPage ? 'active' : ''}>
-                <Link href={`/posts`}>
+                <Link href={`/${urlName}`}>
                   <a>{page}</a>
                 </Link>
               </li>
@@ -98,7 +100,7 @@ export default function Pagination({
           } else {
             return (
               <li key={page} className={page === currentPage ? 'active' : ''}>
-                <Link href={`/posts/page/${page}`}>
+                <Link href={`/${urlName}/page/${page}`}>
                   <a>{page}</a>
                 </Link>
               </li>
@@ -114,7 +116,7 @@ export default function Pagination({
               </Link>
             </li>
             <li>
-              <Link href={`/posts/page/${totalPages.toString()}`}>
+              <Link href={`/${urlName}/page/${totalPages.toString()}`}>
                 <a>Last</a>
               </Link>
             </li>

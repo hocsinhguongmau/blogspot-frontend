@@ -1,5 +1,10 @@
 import sanityClient from '@sanity/client'
-import { PostType, PostsType, categoryType } from './lib/interfaces/PostsType'
+import {
+  PostType,
+  PostsType,
+  categoryType,
+  tagType,
+} from './lib/interfaces/PostsType'
 
 export const client = sanityClient({
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
@@ -13,6 +18,7 @@ export const mainPosts =
   '{"mainPosts":*[_type == "post"] | order(_createdAt desc)[0...8]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,slug},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body},"popularPosts":*[_type == "post"]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,slug},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[0...4]}'
 
 export const categories = '*[_type == "category"]{title,"slug":slug.current}'
+export const tags = '*[_type == "tag"]{title,"slug":slug.current}'
 
 export const getSinglePost = async (
   pageSlug: string | string[] | undefined,
@@ -28,13 +34,13 @@ export const getSinglePost = async (
 }
 
 export const getPostsByCategory = async (
-  category: string,
+  category: string | string[] | undefined,
   start: number,
   end: number,
-): Promise<PostsType | undefined> => {
+): Promise<PostType[] | undefined> => {
   if (typeof category === 'string') {
     const url = encodeURIComponent(category)
-    const query = `{"posts":*[_type == "post" && ${url} in categories[]->slug.current][0]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}],"statics":}}`
+    const query = `{"posts":*[_type == "post" && "${url}" in categories[]->slug.current]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}],"statics":{"numberOfPosts":count(*[_type == "post" && "${url}" in categories[]->slug.current])}}`
     return await client.fetch(query)
   } else {
     return
@@ -49,11 +55,13 @@ export const getAllPosts = async (
   return await client.fetch(query)
 }
 export const getPostsByTag = async (
-  tag: string,
-): Promise<PostsType | undefined> => {
+  tag: string | string[] | undefined,
+  start: number,
+  end: number,
+): Promise<PostType[] | undefined> => {
   if (typeof tag === 'string') {
     const url = encodeURIComponent(tag)
-    const query = `*[_type == "post" && ${tag} in tags[]->slug.current][0]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}`
+    const query = `{"posts":*[_type == "post" && "${url}" in tags[]->slug.current]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}],"statics":{"numberOfPosts":count(*[_type == "post" && "${url}" in tags[]->slug.current])}}`
     return await client.fetch(query)
   } else {
     return
@@ -65,6 +73,8 @@ export const getPosts = async (): Promise<PostsType> =>
 
 export const getCategory = async (): Promise<categoryType[]> =>
   await client.fetch(categories)
+
+export const getTag = async (): Promise<tagType[]> => await client.fetch(tags)
 
 type IdType = {
   slug: string

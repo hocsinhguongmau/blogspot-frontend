@@ -81,6 +81,7 @@ const PostPage = ({ posts }: Props) => {
                 numberOfPosts={posts.statics.numberOfPosts}
                 postsPerPage={postsPerPage}
                 maxPages={5}
+                urlName={'posts'}
               />
             ) : (
               ''

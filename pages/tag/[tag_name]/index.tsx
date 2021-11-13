@@ -4,12 +4,13 @@ import { GetStaticProps, GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
 import { PostType } from '../../../lib/interfaces/PostsType'
-import { getCategory, getPostsByCategory } from '../../../queries'
+import { getPostsByTag, getTag } from '../../../queries'
 import Post from '../../../components/main/Post'
 import Pagination from '../../../components/main/Pagination'
 
 const postsPerPage = 4
 const page = '1'
+
 interface Props {
   posts: {
     posts: PostType[]
@@ -19,9 +20,9 @@ interface Props {
   }
 }
 
-const CategoryPage = ({ posts }: Props) => {
+const TagPage = ({ posts }: Props) => {
   const router = useRouter()
-  const category = router.query.category_name
+  const tag = router.query.tag_name
   const {
     isLoading,
     isError,
@@ -29,7 +30,7 @@ const CategoryPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => getPostsByCategory(category, 0, postsPerPage), {
+  >('posts', () => getPostsByTag(tag, 0, postsPerPage), {
     keepPreviousData: true,
     initialData: posts.posts,
   })
@@ -51,7 +52,7 @@ const CategoryPage = ({ posts }: Props) => {
   }
 
   if (!posts) {
-    return <>No post found for {category}</>
+    return <>No post found for {tag}</>
   } else {
     return (
       <>
@@ -79,9 +80,7 @@ const CategoryPage = ({ posts }: Props) => {
                 numberOfPosts={numberOfPosts}
                 postsPerPage={postsPerPage}
                 maxPages={5}
-                urlName={
-                  typeof category === 'string' ? `category/${category}` : ''
-                }
+                urlName={typeof tag === 'string' ? `tag/${tag}` : ''}
               />
             ) : (
               ''
@@ -96,16 +95,16 @@ const CategoryPage = ({ posts }: Props) => {
 export const getStaticProps: GetStaticProps = async ({
   params,
 }: GetStaticPropsContext) => {
-  const posts = await getPostsByCategory(params?.category_name, 0, postsPerPage)
+  const posts = await getPostsByTag(params?.tag_name, 0, postsPerPage)
 
   return { props: { posts: posts } }
 }
 
 export const getStaticPaths = async () => {
-  const categories = await getCategory()
-  const paths = categories.map((category) => ({
+  const tags = await getTag()
+  const paths = tags.map((tag) => ({
     params: {
-      category_name: category.slug,
+      tag_name: tag.slug,
     },
   }))
   return {
@@ -114,4 +113,4 @@ export const getStaticPaths = async () => {
   }
 }
 
-export default CategoryPage
+export default TagPage

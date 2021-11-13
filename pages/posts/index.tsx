@@ -1,7 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
 import { GetStaticProps, GetStaticPropsContext } from 'next'
-import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
 import { PostType } from '../../lib/interfaces/PostsType'
 import { getAllPosts } from '../../queries'
@@ -21,6 +20,7 @@ const postsPerPage = 4
 const page = '1'
 
 const PostPage = ({ posts }: Props) => {
+  const numberOfPosts = posts.statics.numberOfPosts
   const {
     isLoading,
     isError,
@@ -52,7 +52,9 @@ const PostPage = ({ posts }: Props) => {
     return (
       <>
         <Head>
-          <title>Posts page {page}</title>
+          <title>
+            {numberOfPosts > postsPerPage ? `Posts page ${page}` : 'Post'}
+          </title>
         </Head>
         <div className='posts'>
           <div className='container'>
@@ -67,12 +69,13 @@ const PostPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {typeof page === 'string' ? (
+            {typeof page === 'string' && numberOfPosts > postsPerPage ? (
               <Pagination
                 currentPage={parseInt(page)}
-                numberOfPosts={posts.statics.numberOfPosts}
+                numberOfPosts={numberOfPosts}
                 postsPerPage={postsPerPage}
                 maxPages={5}
+                urlName={'posts'}
               />
             ) : (
               ''
@@ -90,18 +93,5 @@ export const getStaticProps: GetStaticProps = async () => {
   const posts = await getAllPosts(0, postsPerPage)
   return { props: { posts } }
 }
-
-// export const getServerSideProps: GetServerSideProps = async ({
-//   query,
-// }: GetServerSidePropsContext) => {
-//   const page: string | string[] | undefined = query.page_index
-
-//   if (typeof page === 'string') {
-//     start = (parseInt(page) - 1) * postsPerPage
-//     end = parseInt(page) * postsPerPage
-//   }
-//   const posts = await getAllPosts(start, end)
-//   return { props: { posts } }
-// }
 
 export default PostPage
