@@ -1,12 +1,12 @@
 import React from 'react'
 import Head from 'next/head'
-import Post from '../../../components/main/Post'
-import { PostType } from '../../../lib/interfaces/PostsType'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import Pagination from '../../../components/main/Pagination'
-import { getAllPosts } from '../../../queries'
+import { GetStaticProps, GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
+import { PostType } from '../../lib/interfaces/PostsType'
+import { getAllPosts } from '../../queries'
+import Post from '../../components/main/Post'
+import Pagination from '../../components/main/Pagination'
 
 interface Props {
   posts: {
@@ -18,17 +18,9 @@ interface Props {
 }
 
 const postsPerPage = 4
-let start: number,
-  end: number = 0
+const page = '1'
 
 const PostPage = ({ posts }: Props) => {
-  const router = useRouter()
-  const page: string | string[] | undefined = router.query.page_index
-
-  if (typeof page === 'string') {
-    start = (parseInt(page) - 1) * postsPerPage
-    end = parseInt(page) * postsPerPage - 1
-  }
   const {
     isLoading,
     isError,
@@ -36,7 +28,7 @@ const PostPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => getAllPosts(start, end), {
+  >('posts', () => getAllPosts(0, postsPerPage), {
     keepPreviousData: true,
     initialData: posts.allPosts,
   })
@@ -94,17 +86,22 @@ const PostPage = ({ posts }: Props) => {
   }
 }
 
-export const getServerSideProps: GetServerSideProps = async ({
-  query,
-}: GetServerSidePropsContext) => {
-  const page: string | string[] | undefined = query.page_index
-
-  if (typeof page === 'string') {
-    start = (parseInt(page) - 1) * postsPerPage
-    end = parseInt(page) * postsPerPage
-  }
-  const posts = await getAllPosts(start, end)
+export const getStaticProps: GetStaticProps = async () => {
+  const posts = await getAllPosts(0, postsPerPage)
   return { props: { posts } }
 }
+
+// export const getServerSideProps: GetServerSideProps = async ({
+//   query,
+// }: GetServerSidePropsContext) => {
+//   const page: string | string[] | undefined = query.page_index
+
+//   if (typeof page === 'string') {
+//     start = (parseInt(page) - 1) * postsPerPage
+//     end = parseInt(page) * postsPerPage
+//   }
+//   const posts = await getAllPosts(start, end)
+//   return { props: { posts } }
+// }
 
 export default PostPage
