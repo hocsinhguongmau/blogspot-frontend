@@ -6,12 +6,7 @@ import RelatedPost from '../../components/main/RelatedPost'
 import getYouTubeId from 'get-youtube-id'
 import YouTube from 'react-youtube'
 
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from 'next'
+import { GetStaticProps, GetStaticPropsContext } from 'next'
 import { client, getAllSlugs, getSinglePost } from '../../queries'
 import { useQuery, UseQueryResult } from 'react-query'
 import { PostType, RelatedPostType } from '../../lib/interfaces/PostsType'

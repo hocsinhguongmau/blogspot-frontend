@@ -81,3 +81,12 @@ type IdType = {
 }
 export const getAllSlugs = async (): Promise<IdType[]> =>
   await client.fetch(`*[_type == "post"]{"slug": slug.current}`)
+
+export const searchByQuery = async (
+  query: string | string[] | undefined,
+  start: number,
+  end: number,
+): Promise<PostType[]> =>
+  await client.fetch(
+    `{"posts":*[title match "${query}" || body[].children[].text match "${query}" || (_type=="post" && categories[]->slug.current match "${query}")|| (_type=="post" && tags[]->slug.current match "${query}")]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}],"statics":{"numberOfPosts":count(*[title match "${query}" || body[].children[].text match "${query}" || (_type=="post" && categories[]->slug.current match "${query}")|| (_type=="post" && tags[]->slug.current match "${query}")])}}`,
+  )
