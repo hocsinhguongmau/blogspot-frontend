@@ -9,7 +9,6 @@ import Post from '../../../../components/main/Post'
 import { PostType } from '../../../../lib/interfaces/PostsType'
 
 const postsPerPage = 4
-const page = '1'
 interface Props {
   posts: {
     posts: PostType[]
@@ -107,7 +106,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     start = (parseInt(page) - 1) * postsPerPage
     end = parseInt(page) * postsPerPage
   }
-  console.log(query)
   const posts = await getPostsByTag(query?.tag_name, start, end)
 
   return { props: { posts: posts } }

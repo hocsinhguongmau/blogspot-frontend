@@ -1,12 +1,14 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import { useRouter } from 'next/router'
-import Head from 'next/head'
 import React from 'react'
+import Head from 'next/head'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
-import { PostType } from '../../lib/interfaces/PostsType'
-import { searchByQuery } from '../../queries'
-import Post from '../../components/main/Post'
-import Pagination from '../../components/main/Pagination'
+import { PostType } from '../../../lib/interfaces/PostsType'
+import { searchByQuery } from '../../../queries'
+import Post from '../../../components/main/Post'
+import Pagination from '../../../components/main/Pagination'
+
+const postsPerPage = 4
 
 interface Props {
   posts: {
@@ -17,11 +19,17 @@ interface Props {
   }
 }
 
-const postsPerPage = 4
-const page = '1'
-export default function SearchPage({ posts }: Props) {
+let start: number,
+  end: number = 0
+
+const SearchPage = ({ posts }: Props) => {
   const router = useRouter()
   const search = router.query.q
+  const page: string | string[] | undefined = router.query.page_index
+  if (typeof page === 'string') {
+    start = (parseInt(page) - 1) * postsPerPage
+    end = parseInt(page) * postsPerPage - 1
+  }
   const {
     isLoading,
     isError,
@@ -29,9 +37,9 @@ export default function SearchPage({ posts }: Props) {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => searchByQuery(search, 0, postsPerPage), {
-    initialData: posts.posts,
+  >('posts', () => searchByQuery(search, start, end), {
     keepPreviousData: true,
+    initialData: posts.posts,
   })
   const numberOfPosts = posts.statics.numberOfPosts
   if (isLoading) {
@@ -50,13 +58,15 @@ export default function SearchPage({ posts }: Props) {
     )
   }
 
-  if (posts.posts.length === 0) {
-    return <>No post found for "{search}"</>
+  if (!posts) {
+    return <>No post found for {search}</>
   } else {
     return (
       <>
         <Head>
-          <title>search</title>
+          <title>
+            {numberOfPosts > postsPerPage ? `Posts page ${page}` : 'Post'}
+          </title>
         </Head>
         <div className='posts'>
           <div className='container'>
@@ -95,6 +105,14 @@ export default function SearchPage({ posts }: Props) {
 export const getServerSideProps: GetServerSideProps = async ({
   query,
 }: GetServerSidePropsContext) => {
-  const posts = await searchByQuery(query?.q, 0, postsPerPage)
+  const page: string | string[] | undefined = query.page_index
+  if (typeof page === 'string') {
+    start = (parseInt(page) - 1) * postsPerPage
+    end = parseInt(page) * postsPerPage
+  }
+  const posts = await searchByQuery(query?.q, start, end)
+
   return { props: { posts: posts } }
 }
+
+export default SearchPage
