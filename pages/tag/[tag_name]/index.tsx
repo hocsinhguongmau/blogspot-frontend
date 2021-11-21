@@ -12,7 +12,7 @@ const postsPerPage = 4
 const page = '1'
 
 interface Props {
-  posts: {
+  posts?: {
     posts: PostType[]
     statics: {
       numberOfPosts: number
@@ -32,9 +32,9 @@ const TagPage = ({ posts }: Props) => {
     Error
   >('posts', () => getPostsByTag(tag, 0, postsPerPage), {
     keepPreviousData: true,
-    initialData: posts.posts,
+    initialData: posts?.posts,
   })
-  const numberOfPosts = posts.statics.numberOfPosts
+  const numberOfPosts = posts?.statics.numberOfPosts
   if (isLoading) {
     return (
       <div>
@@ -58,7 +58,7 @@ const TagPage = ({ posts }: Props) => {
       <>
         <Head>
           <title>
-            {numberOfPosts > postsPerPage ? `Posts page ${page}` : 'Post'}
+            {numberOfPosts! > postsPerPage ? `Posts page ${page}` : 'Post'}
           </title>
         </Head>
         <div className='posts'>
@@ -74,10 +74,10 @@ const TagPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {typeof page === 'string' && numberOfPosts > postsPerPage ? (
+            {typeof page === 'string' && numberOfPosts! > postsPerPage ? (
               <Pagination
                 currentPage={parseInt(page)}
-                numberOfPosts={numberOfPosts}
+                numberOfPosts={numberOfPosts!}
                 postsPerPage={postsPerPage}
                 maxPages={5}
                 urlName={typeof tag === 'string' ? `tag/${tag}` : ''}

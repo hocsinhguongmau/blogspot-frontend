@@ -11,7 +11,7 @@ import Pagination from '../../../components/main/Pagination'
 const postsPerPage = 4
 const page = '1'
 interface Props {
-  posts: {
+  posts?: {
     posts: PostType[]
     statics: {
       numberOfPosts: number
@@ -31,9 +31,9 @@ const CategoryPage = ({ posts }: Props) => {
     Error
   >('posts', () => getPostsByCategory(category, 0, postsPerPage), {
     keepPreviousData: true,
-    initialData: posts.posts,
+    initialData: posts?.posts,
   })
-  const numberOfPosts = posts.statics.numberOfPosts
+  const numberOfPosts = posts?.statics.numberOfPosts
   if (isLoading) {
     return (
       <div>
@@ -57,7 +57,7 @@ const CategoryPage = ({ posts }: Props) => {
       <>
         <Head>
           <title>
-            {numberOfPosts > postsPerPage ? `Posts page ${page}` : 'Post'}
+            {numberOfPosts! > postsPerPage ? `Posts page ${page}` : 'Post'}
           </title>
         </Head>
         <div className='posts'>
@@ -73,10 +73,10 @@ const CategoryPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {typeof page === 'string' && numberOfPosts > postsPerPage ? (
+            {typeof page === 'string' && numberOfPosts! > postsPerPage ? (
               <Pagination
                 currentPage={parseInt(page)}
-                numberOfPosts={numberOfPosts}
+                numberOfPosts={numberOfPosts!}
                 postsPerPage={postsPerPage}
                 maxPages={5}
                 urlName={
