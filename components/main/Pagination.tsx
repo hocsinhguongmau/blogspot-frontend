@@ -53,8 +53,14 @@ export default function Pagination({
 
   const isFirst = currentPage === 1
   const isLast = currentPage === totalPages
-  const prevPage = `/${urlName}/page/${currentPage - 1}?q=${query}`
-  const nextPage = `/${urlName}/page/${currentPage + 1}?q=${query}`
+  let prevPage, nextPage
+  if (query) {
+    prevPage = `/${urlName}/page/${currentPage - 1}?q=${query}`
+    nextPage = `/${urlName}/page/${currentPage + 1}?q=${query}`
+  } else {
+    prevPage = `/${urlName}/page/${currentPage - 1}`
+    nextPage = `/${urlName}/page/${currentPage + 1}`
+  }
   // calculate start and end item indexes
   let startIndex = (currentPage - 1) * postsPerPage
   let endIndex = Math.min(startIndex + postsPerPage - 1, numberOfPosts - 1)
