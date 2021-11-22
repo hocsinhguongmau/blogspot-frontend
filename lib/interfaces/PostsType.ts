@@ -21,6 +21,7 @@ export type RelatedPostType = {
 export type authorType = {
   slug: string
   name: string
+  body?: Array<object>
 }
 
 export type tagType = {

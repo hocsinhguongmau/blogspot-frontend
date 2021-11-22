@@ -3,6 +3,7 @@ import {
   PostType,
   PostsType,
   categoryType,
+  authorType,
   tagType,
 } from './lib/interfaces/PostsType'
 
@@ -19,6 +20,8 @@ export const mainPosts =
 
 export const categories = '*[_type == "category"]{title,"slug":slug.current}'
 export const tags = '*[_type == "tag"]{title,"slug":slug.current}'
+
+export const authors = '*[_type == "author"]{name,"slug":slug.current,bio}'
 
 export const getSinglePost = async (
   pageSlug: string | string[] | undefined,
@@ -68,6 +71,20 @@ export const getPostsByTag = async (
   }
 }
 
+export const getPostsByAuthor = async (
+  name: string | string[] | undefined,
+  start: number,
+  end: number,
+): Promise<PostType[] | undefined> => {
+  if (typeof name === 'string') {
+    const url = encodeURIComponent(name)
+    const query = `{"author":*[_type=="author" && "${url}" match slug.current]{name,"slug":slug.current,bio},"posts":*[_type == "post" && author._ref in *[_type=="author" && slug.current=="${url}"]._id]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[${start}...${end}],"statics":{"numberOfPosts":count(*[_type == "post" && "${url}" match author->slug.current])}}`
+    return await client.fetch(query)
+  } else {
+    return
+  }
+}
+
 export const getPosts = async (): Promise<PostsType> =>
   await client.fetch(mainPosts)
 
@@ -75,6 +92,9 @@ export const getCategory = async (): Promise<categoryType[]> =>
   await client.fetch(categories)
 
 export const getTag = async (): Promise<tagType[]> => await client.fetch(tags)
+
+export const getAuthor = async (): Promise<authorType[]> =>
+  await client.fetch(authors)
 
 type IdType = {
   slug: string
