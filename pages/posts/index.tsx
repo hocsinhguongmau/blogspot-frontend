@@ -6,6 +6,8 @@ import { PostType } from '../../lib/interfaces/PostsType'
 import { getAllPosts } from '../../queries'
 import Post from '../../components/main/Post'
 import Pagination from '../../components/main/Pagination'
+import NotFound from '../../components/main/NotFound'
+import Loading from '../../components/Loading'
 
 interface Props {
   posts: {
@@ -25,10 +27,11 @@ const PostPage = ({ posts }: Props) => {
     isLoading,
     isError,
     error,
+    data,
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => getAllPosts(0, postsPerPage), {
+  >(['posts', 1], () => getAllPosts(0, postsPerPage), {
     keepPreviousData: true,
     initialData: posts.allPosts,
   })
@@ -36,7 +39,7 @@ const PostPage = ({ posts }: Props) => {
   if (isLoading) {
     return (
       <div>
-        <p>Loading...</p>
+        <Loading />
       </div>
     )
   }
@@ -48,7 +51,7 @@ const PostPage = ({ posts }: Props) => {
       </div>
     )
   }
-  if (posts.allPosts.length) {
+  if (data) {
     return (
       <>
         <Head>
@@ -59,7 +62,7 @@ const PostPage = ({ posts }: Props) => {
         <div className='posts'>
           <div className='container'>
             <div className='posts__wrapper'>
-              {posts.allPosts.map((post: PostType) => (
+              {data.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}
@@ -85,7 +88,7 @@ const PostPage = ({ posts }: Props) => {
       </>
     )
   } else {
-    return <div>No posts found</div>
+    return <NotFound />
   }
 }
 

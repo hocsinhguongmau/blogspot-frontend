@@ -7,6 +7,8 @@ import { PostType } from '../../../lib/interfaces/PostsType'
 import { getPostsByTag, getTag } from '../../../queries'
 import Post from '../../../components/main/Post'
 import Pagination from '../../../components/main/Pagination'
+import Loading from '../../../components/Loading'
+import NotFound from '../../../components/main/NotFound'
 
 const postsPerPage = 4
 const page = '1'
@@ -27,20 +29,17 @@ const TagPage = ({ posts }: Props) => {
     isLoading,
     isError,
     error,
+    data,
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => getPostsByTag(tag, 0, postsPerPage), {
+  >(['postsByTag', 1], () => getPostsByTag(tag, 0, postsPerPage), {
     keepPreviousData: true,
     initialData: posts?.posts,
   })
   const numberOfPosts = posts?.statics.numberOfPosts
   if (isLoading) {
-    return (
-      <div>
-        <p>Loading...</p>
-      </div>
-    )
+    return <Loading />
   }
 
   if (isError) {
@@ -51,8 +50,8 @@ const TagPage = ({ posts }: Props) => {
     )
   }
 
-  if (!posts) {
-    return <>No post found for {tag}</>
+  if (!data) {
+    return <NotFound />
   } else {
     return (
       <>
@@ -64,7 +63,7 @@ const TagPage = ({ posts }: Props) => {
         <div className='posts'>
           <div className='container'>
             <div className='posts__wrapper'>
-              {posts.posts.map((post: PostType) => (
+              {data.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}

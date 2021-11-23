@@ -7,6 +7,8 @@ import { getPostsByAuthor } from '../../../../queries'
 import Pagination from '../../../../components/main/Pagination'
 import Post from '../../../../components/main/Post'
 import { authorType, PostType } from '../../../../lib/interfaces/PostsType'
+import Loading from '../../../../components/Loading'
+import NotFound from '../../../../components/main/NotFound'
 
 const postsPerPage = 4
 interface Props {
@@ -34,20 +36,17 @@ const AuthorPage = ({ posts }: Props) => {
     isLoading,
     isError,
     error,
+    data,
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => getPostsByAuthor(author, start, end), {
+  >(['postsByAuthor', page], () => getPostsByAuthor(author, start, end), {
     keepPreviousData: true,
     initialData: posts.posts,
   })
   const numberOfPosts = posts.statics.numberOfPosts
   if (isLoading) {
-    return (
-      <div>
-        <p>Loading...</p>
-      </div>
-    )
+    return <Loading />
   }
 
   if (isError) {
@@ -58,8 +57,12 @@ const AuthorPage = ({ posts }: Props) => {
     )
   }
 
-  if (!posts) {
-    return <>No post found for {author}</>
+  if (!data) {
+    return (
+      <>
+        <NotFound />
+      </>
+    )
   } else {
     return (
       <>
@@ -71,7 +74,7 @@ const AuthorPage = ({ posts }: Props) => {
         <div className='posts'>
           <div className='container'>
             <div className='posts__wrapper'>
-              {posts.posts.map((post: PostType) => (
+              {data.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}

@@ -7,6 +7,8 @@ import { getPostsByCategory } from '../../../../queries'
 import Pagination from '../../../../components/main/Pagination'
 import Post from '../../../../components/main/Post'
 import { PostType } from '../../../../lib/interfaces/PostsType'
+import Loading from '../../../../components/Loading'
+import NotFound from '../../../../components/main/NotFound'
 
 const postsPerPage = 4
 interface Props {
@@ -33,20 +35,17 @@ const CategoryPage = ({ posts }: Props) => {
     isLoading,
     isError,
     error,
+    data,
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => getPostsByCategory(category, start, end), {
+  >(['postsByCategory', page], () => getPostsByCategory(category, start, end), {
     keepPreviousData: true,
     initialData: posts.posts,
   })
   const numberOfPosts = posts.statics.numberOfPosts
   if (isLoading) {
-    return (
-      <div>
-        <p>Loading...</p>
-      </div>
-    )
+    return <Loading />
   }
 
   if (isError) {
@@ -57,8 +56,12 @@ const CategoryPage = ({ posts }: Props) => {
     )
   }
 
-  if (!posts) {
-    return <>No post found for {category}</>
+  if (!data) {
+    return (
+      <>
+        <NotFound />
+      </>
+    )
   } else {
     return (
       <>

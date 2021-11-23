@@ -85,10 +85,11 @@ const PostPage = ({ post }: AppProps) => {
     isLoading,
     isError,
     error,
+    data,
   }: UseQueryResult<PostType | undefined, Error> = useQuery<
     PostType | undefined,
     Error
-  >('post', () => getSinglePost(slug), {
+  >(['post', slug], () => getSinglePost(slug), {
     initialData: post,
   })
 
@@ -108,14 +109,14 @@ const PostPage = ({ post }: AppProps) => {
     )
   }
 
-  if (!post) {
+  if (!data) {
     return <NotFound />
   } else {
-    const imageProps = useNextSanityImage(client, post.imageUrl)
+    const imageProps = useNextSanityImage(client, data.imageUrl)
     return (
       <>
         <Head>
-          <title>{post.title}</title>
+          <title>{data.title}</title>
         </Head>
         <div className='post'>
           <div
@@ -124,7 +125,7 @@ const PostPage = ({ post }: AppProps) => {
             <div className='breadcrumbs__content'>
               <p>
                 <span className='post__category'>
-                  {post.categories.map((category) => (
+                  {data.categories.map((category) => (
                     <Link
                       href={`/category/${category.slug}`}
                       key={category.slug}>
@@ -133,18 +134,18 @@ const PostPage = ({ post }: AppProps) => {
                   ))}
                 </span>
                 <span className='post__tag'>
-                  {post.tags.map((tag) => (
+                  {data.tags.map((tag) => (
                     <Link href={`/tag/${tag.slug}`} key={tag.slug}>
                       <a>#{tag.title}</a>
                     </Link>
                   ))}
                 </span>
               </p>
-              <h1 className='post__title'>{post.title}</h1>
+              <h1 className='post__title'>{data.title}</h1>
               <p className='post__date'>
-                {post.createdAt.slice(0, 10).toUpperCase()} |
-                <Link href={`/author/${post.author.slug}`}>
-                  <a>{post.author.name.toUpperCase()}</a>
+                {data.createdAt.slice(0, 10).toUpperCase()} |
+                <Link href={`/author/${data.author.slug}`}>
+                  <a>{data.author.name.toUpperCase()}</a>
                 </Link>
               </p>
             </div>
@@ -152,7 +153,7 @@ const PostPage = ({ post }: AppProps) => {
           <div className='container'>
             <article className='post__content'>
               <BlockContent
-                blocks={post.body}
+                blocks={data.body}
                 imageOptions={{ w: 640, fit: 'max' }}
                 projectId={process.env.NEXT_PUBLIC_PROJECT_ID}
                 dataset={process.env.NEXT_PUBLIC_DATASET}
@@ -164,7 +165,7 @@ const PostPage = ({ post }: AppProps) => {
             <div className='container'>
               <h2 className='recent-posts__title'>Related posts</h2>
               <div className='recent-posts__wrapper'>
-                {post.categories.map((category) =>
+                {data.categories.map((category) =>
                   category.relatedPosts.map((post: RelatedPostType) => (
                     <RelatedPost
                       post={post}

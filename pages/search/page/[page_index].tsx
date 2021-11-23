@@ -7,6 +7,8 @@ import { PostType } from '../../../lib/interfaces/PostsType'
 import { searchByQuery } from '../../../queries'
 import Post from '../../../components/main/Post'
 import Pagination from '../../../components/main/Pagination'
+import Loading from '../../../components/Loading'
+import NotFound from '../../../components/main/NotFound'
 
 const postsPerPage = 4
 
@@ -34,6 +36,7 @@ const SearchPage = ({ posts }: Props) => {
     isLoading,
     isError,
     error,
+    data,
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
@@ -45,7 +48,7 @@ const SearchPage = ({ posts }: Props) => {
   if (isLoading) {
     return (
       <div>
-        <p>Loading...</p>
+        <Loading />
       </div>
     )
   }
@@ -58,8 +61,8 @@ const SearchPage = ({ posts }: Props) => {
     )
   }
 
-  if (!posts) {
-    return <>No post found for {search}</>
+  if (!data) {
+    return <NotFound />
   } else {
     return (
       <>
@@ -71,7 +74,7 @@ const SearchPage = ({ posts }: Props) => {
         <div className='posts'>
           <div className='container'>
             <div className='posts__wrapper'>
-              {posts.posts.map((post: PostType) => (
+              {data.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}

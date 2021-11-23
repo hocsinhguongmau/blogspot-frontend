@@ -7,6 +7,8 @@ import Pagination from '../../../components/main/Pagination'
 import { getAllPosts } from '../../../queries'
 import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
+import Loading from '../../../components/Loading'
+import NotFound from '../../../components/main/NotFound'
 
 interface Props {
   posts: {
@@ -33,20 +35,17 @@ const PostPage = ({ posts }: Props) => {
     isLoading,
     isError,
     error,
+    data,
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => getAllPosts(start, end), {
+  >(['posts', page], () => getAllPosts(start, end), {
     keepPreviousData: true,
     initialData: posts.allPosts,
   })
 
   if (isLoading) {
-    return (
-      <div>
-        <p>Loading...</p>
-      </div>
-    )
+    return <Loading />
   }
 
   if (isError) {
@@ -56,7 +55,7 @@ const PostPage = ({ posts }: Props) => {
       </div>
     )
   }
-  if (posts.allPosts.length) {
+  if (data) {
     return (
       <>
         <Head>
@@ -91,7 +90,7 @@ const PostPage = ({ posts }: Props) => {
       </>
     )
   } else {
-    return <div>No posts found</div>
+    return <NotFound />
   }
 }
 
@@ -105,7 +104,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     end = parseInt(page) * postsPerPage
   }
   const posts = await getAllPosts(start, end)
-  return { props: { posts } }
+  return { props: { posts: posts } }
 }
 
 export default PostPage

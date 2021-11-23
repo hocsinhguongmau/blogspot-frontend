@@ -18,9 +18,11 @@
     &__title {
       @apply text-xl font-bold mt-6 leading-8;
       @extend .text-hover;
+      // @extend .ellipsis-three;
     }
     &__description {
       @apply mt-4 leading-7 mb-10;
+      // @extend .ellipsis-three;
     }
   }
 }
