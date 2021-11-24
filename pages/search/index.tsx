@@ -32,7 +32,7 @@ export default function SearchPage({ posts }: Props) {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => searchByQuery(search, 0, postsPerPage), {
+  >(['search', 1], () => searchByQuery(search, 0, postsPerPage), {
     initialData: posts.posts,
     keepPreviousData: true,
   })
@@ -49,9 +49,7 @@ export default function SearchPage({ posts }: Props) {
     )
   }
 
-  if (!data) {
-    return <NotFound />
-  } else {
+  if (data && data.length > 0) {
     return (
       <>
         <Head>
@@ -88,6 +86,8 @@ export default function SearchPage({ posts }: Props) {
         </div>
       </>
     )
+  } else {
+    return <NotFound />
   }
 }
 

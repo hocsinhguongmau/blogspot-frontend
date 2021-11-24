@@ -40,7 +40,7 @@ const SearchPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >('posts', () => searchByQuery(search, start, end), {
+  >(['search', page], () => searchByQuery(search, start, end), {
     keepPreviousData: true,
     initialData: posts.posts,
   })
@@ -61,9 +61,7 @@ const SearchPage = ({ posts }: Props) => {
     )
   }
 
-  if (!data) {
-    return <NotFound />
-  } else {
+  if (data && data.length > 0) {
     return (
       <>
         <Head>
@@ -102,6 +100,8 @@ const SearchPage = ({ posts }: Props) => {
         </div>
       </>
     )
+  } else {
+    return <NotFound />
   }
 }
 

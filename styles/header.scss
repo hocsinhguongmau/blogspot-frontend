@@ -6,6 +6,12 @@
   &__bottom {
     @apply my-6;
   }
+  .social {
+    @apply hidden md:flex align-top mt-2;
+    li {
+      @apply mx-2;
+    }
+  }
 }
 
 .search {
@@ -22,14 +28,9 @@
 }
 
 .social {
-  @apply hidden md:flex align-top mt-2;
-
-  li {
-    @apply mx-2 text-xl;
-    a {
-      @apply text-gray-400;
-      @extend .text-hover;
-    }
+  a {
+    @apply text-gray-400 text-xl;
+    @extend .text-hover;
   }
 }
 

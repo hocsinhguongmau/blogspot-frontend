@@ -18,9 +18,6 @@ export const client = sanityClient({
 export const mainPosts =
   '{"mainPosts":*[_type == "post"] | order(_createdAt desc)[0...8]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,slug},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body},"popularPosts":*[_type == "post"]{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,slug},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}[0...4]}'
 
-export const categories = '*[_type == "category"]{title,"slug":slug.current}'
-export const tags = '*[_type == "tag"]{title,"slug":slug.current}'
-
 export const authors = '*[_type == "author"]{name,"slug":slug.current,bio}'
 
 export const getSinglePost = async (
@@ -88,10 +85,19 @@ export const getPostsByAuthor = async (
 export const getPosts = async (): Promise<PostsType> =>
   await client.fetch(mainPosts)
 
-export const getCategory = async (): Promise<categoryType[]> =>
-  await client.fetch(categories)
+export const categories = ''
+export const getCategory = async (
+  start: number,
+  end: number,
+): Promise<categoryType[]> =>
+  await client.fetch(
+    `*[_type == "category"]{title,"slug":slug.current}[${start}...${end}]`,
+  )
 
-export const getTag = async (): Promise<tagType[]> => await client.fetch(tags)
+export const getTag = async (start: number, end: number): Promise<tagType[]> =>
+  await client.fetch(
+    `*[_type == "tag"]{title,"slug":slug.current}[${start}...${end}]`,
+  )
 
 export const getAuthor = async (): Promise<authorType[]> =>
   await client.fetch(authors)

@@ -1,5 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import Search from '../header/Search'
 
 const NotFound = () => (
@@ -7,12 +8,19 @@ const NotFound = () => (
     <Head>
       <title>Post not found</title>
     </Head>
-    <div className='post'>
-      <h1 className='post__title text-center'>Sorry not found</h1>
-      <div>
+    <div className='md:w-2/3 mx-auto'>
+      <h1 className='post__title'>Article not found</h1>
+      <p className='mt-2'>
+        Try your search again or search for something else.
+      </p>
+      <div className='mt-4'>
         <Search />
       </div>
-      <p>back to home page</p>
+      <div className='mt-8'>
+        <Link href='/'>
+          <a className='button'>Back to home page</a>
+        </Link>
+      </div>
     </div>
   </>
 )

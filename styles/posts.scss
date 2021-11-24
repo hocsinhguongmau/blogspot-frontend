@@ -84,7 +84,7 @@
       }
     }
     .youtube-iframe {
-      @apply mx-auto;
+      @apply mx-auto max-w-full;
     }
   }
 }

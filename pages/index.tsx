@@ -47,7 +47,7 @@ const Home = ({ posts }: InitialDataProps) => {
         <main>
           <NewPosts posts={data.mainPosts.slice(0, 4)} />
           <RecentPosts posts={data.mainPosts.slice(4, 12)} />
-          <PopularPosts posts={data.popularPosts} />
+          {/* <PopularPosts posts={data.popularPosts} /> */}
         </main>
       </>
     )

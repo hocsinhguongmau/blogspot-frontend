@@ -2,7 +2,7 @@
   @extend .bg-default;
   @apply py-12 md:py-16 mt-10 md:mt-20 text-center md:text-left;
   .container {
-    @apply md:grid md:grid-cols-3 gap-2 lg:grid-cols-6 lg:gap-4;
+    @apply md:grid md:grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-4;
   }
   &__logo {
     @apply mb-4 inline-block;
@@ -21,6 +21,12 @@
     }
     .copy-rights {
       @apply text-xs mt-10 text-gray-200;
+    }
+  }
+  .social {
+    @apply flex justify-center md:justify-start;
+    li {
+      @apply mx-2 md:mr-4 md:mx-0;
     }
   }
 }

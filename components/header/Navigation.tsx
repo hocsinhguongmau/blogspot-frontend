@@ -4,39 +4,7 @@ import { CgClose } from '@react-icons/all-files/cg/CgClose'
 import { GiHamburgerMenu } from '@react-icons/all-files/gi/GiHamburgerMenu'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getCategory } from '../../queries'
-import { useQuery, UseQueryResult } from 'react-query'
-import { categoryType } from '../../lib/interfaces/PostsType'
-
-const Links = (): ReactElement => {
-  const {
-    isLoading,
-    isError,
-    error,
-    data,
-  }: UseQueryResult<categoryType[], Error> = useQuery<categoryType[], Error>(
-    'links',
-    getCategory,
-  )
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-  if (isError) {
-    return <div>Error! {error?.message}</div>
-  }
-
-  return (
-    <ul>
-      {data?.map((link) => (
-        <li key={link.slug}>
-          <Link href={`/category/${link.slug}`}>
-            <a>{link.title}</a>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  )
-}
+import { CategoryLinks, TagLinks } from '../Links'
 
 export default function Navigation(): ReactElement {
   const [openMenu, setOpenMenu] = useState<boolean>(false)
@@ -44,7 +12,7 @@ export default function Navigation(): ReactElement {
     <>
       {isDesktop ? (
         <div className='navigation'>
-          <Links />
+          <CategoryLinks start={0} end={10} />
         </div>
       ) : (
         <div className='navigation-mobile'>
@@ -63,7 +31,7 @@ export default function Navigation(): ReactElement {
             <button className='button-close' onClick={() => setOpenMenu(false)}>
               <CgClose />
             </button>
-            <Links />
+            <CategoryLinks start={0} end={10} />
           </div>
         </div>
       )}

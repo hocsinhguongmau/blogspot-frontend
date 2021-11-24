@@ -51,8 +51,11 @@ const TagPage = ({ posts }: Props) => {
   }
 
   if (!data) {
+    console.log(data, ' not found')
     return <NotFound />
   } else {
+    console.log(data, ' found')
+
     return (
       <>
         <Head>
