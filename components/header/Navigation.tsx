@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { CgClose } from '@react-icons/all-files/cg/CgClose'
 import { GiHamburgerMenu } from '@react-icons/all-files/gi/GiHamburgerMenu'
 import Link from 'next/link'
@@ -7,7 +8,12 @@ import { CategoryLinks } from '../Links'
 
 export default function Navigation(): ReactElement {
   const [openMenu, setOpenMenu] = useState<boolean>(false)
-
+  console.log(openMenu)
+  const router = useRouter()
+  const param = router.query.category_name
+  useEffect(() => {
+    setOpenMenu(false)
+  }, [param])
   return (
     <>
       <div className='navigation '>

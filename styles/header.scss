@@ -36,7 +36,7 @@
 }
 
 .navigation {
-  @apply hidden md:block;
+  @apply hidden lg:block;
   @apply text-center pb-2;
   ul {
     li {
@@ -50,7 +50,7 @@
   }
 }
 .navigation-mobile {
-  @apply md:hidden;
+  @apply lg:hidden;
   &__button {
     @apply mx-auto text-4xl text-red-500 block;
   }
