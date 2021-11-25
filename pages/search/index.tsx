@@ -32,9 +32,8 @@ export default function SearchPage({ posts }: Props) {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >(['search', 1], () => searchByQuery(search, 0, postsPerPage), {
+  >([`search_${search}`, 1], () => searchByQuery(search, 0, postsPerPage), {
     initialData: posts.posts,
-    keepPreviousData: true,
   })
   const numberOfPosts = posts.statics.numberOfPosts
   if (isLoading) {

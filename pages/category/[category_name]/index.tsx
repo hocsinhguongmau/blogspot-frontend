@@ -33,10 +33,9 @@ const CategoryPage = ({ posts }: Props) => {
     PostType[] | undefined,
     Error
   >(
-    ['postsByCategory', 1],
+    [`postsByCategory_${category}`, 1],
     () => getPostsByCategory(category, 0, postsPerPage),
     {
-      keepPreviousData: true,
       initialData: posts?.posts,
     },
   )

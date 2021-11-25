@@ -25,7 +25,11 @@ export default function RecentPosts({ posts }: AppProps): ReactElement {
             />
           ))}
         </div>
-        <button className='button'>View more article</button>
+        <div className='text-center'>
+          <Link href='/posts'>
+            <a className='button'>View more article</a>
+          </Link>
+        </div>
       </div>
     </section>
   )

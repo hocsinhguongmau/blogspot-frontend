@@ -40,10 +40,13 @@ const AuthorPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >(['postsByAuthor', page], () => getPostsByAuthor(author, start, end), {
-    keepPreviousData: true,
-    initialData: posts.posts,
-  })
+  >(
+    [`postsByAuthor_${author}`, page],
+    () => getPostsByAuthor(author, start, end),
+    {
+      initialData: posts.posts,
+    },
+  )
   const numberOfPosts = posts.statics.numberOfPosts
   if (isLoading) {
     return <Loading />

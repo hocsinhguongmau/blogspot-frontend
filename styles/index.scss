@@ -101,7 +101,7 @@
     }
   }
   .button {
-    @apply mx-auto block mt-20;
+    @apply mx-auto inline-block mt-20 max-w-full;
   }
 }
 

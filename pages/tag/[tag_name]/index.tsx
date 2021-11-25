@@ -33,8 +33,7 @@ const TagPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >(['postsByTag', 1], () => getPostsByTag(tag, 0, postsPerPage), {
-    keepPreviousData: true,
+  >([`postsByTag_${tag}`, 1], () => getPostsByTag(tag, 0, postsPerPage), {
     initialData: posts?.posts,
   })
   const numberOfPosts = posts?.statics.numberOfPosts
@@ -51,11 +50,8 @@ const TagPage = ({ posts }: Props) => {
   }
 
   if (!data) {
-    console.log(data, ' not found')
     return <NotFound />
   } else {
-    console.log(data, ' found')
-
     return (
       <>
         <Head>

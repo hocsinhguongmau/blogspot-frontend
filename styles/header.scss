@@ -16,7 +16,8 @@
 
 .search {
   input {
-    @apply border-b-2 border-gray-200 py-1;
+    @apply md:w-auto border-b-2 border-gray-200 py-1;
+    width: calc(100% - 30px);
     &:focus {
       @apply outline-none;
     }
@@ -35,6 +36,7 @@
 }
 
 .navigation {
+  @apply hidden md:block;
   @apply text-center pb-2;
   ul {
     li {
@@ -48,8 +50,9 @@
   }
 }
 .navigation-mobile {
+  @apply md:hidden;
   &__button {
-    @apply mx-auto text-4xl text-red-500;
+    @apply mx-auto text-4xl text-red-500 block;
   }
   &__panel {
     @apply hidden;

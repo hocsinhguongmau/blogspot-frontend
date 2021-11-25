@@ -39,10 +39,13 @@ const CategoryPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >(['postsByCategory', page], () => getPostsByCategory(category, start, end), {
-    keepPreviousData: true,
-    initialData: posts.posts,
-  })
+  >(
+    [`postsByCategory_${category}`, page],
+    () => getPostsByCategory(category, start, end),
+    {
+      initialData: posts.posts,
+    },
+  )
   const numberOfPosts = posts.statics.numberOfPosts
   if (isLoading) {
     return <Loading />

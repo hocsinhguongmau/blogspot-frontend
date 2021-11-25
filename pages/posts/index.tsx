@@ -32,7 +32,6 @@ const PostPage = ({ posts }: Props) => {
     PostType[] | undefined,
     Error
   >(['posts', 1], () => getAllPosts(0, postsPerPage), {
-    keepPreviousData: true,
     initialData: posts.allPosts,
   })
 

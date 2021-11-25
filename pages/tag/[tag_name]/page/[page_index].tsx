@@ -39,8 +39,7 @@ const TagPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >(['postsByTag', page], () => getPostsByTag(tag, start, end), {
-    keepPreviousData: true,
+  >([`postsByTag_${tag}`, page], () => getPostsByTag(tag, start, end), {
     initialData: posts.posts,
   })
   const numberOfPosts = posts.statics.numberOfPosts

@@ -37,7 +37,7 @@ export default function Post({
       </div>
       <div className={`${classes}__text`}>
         <p className={`${classes}__tag`}>
-          {post.tags.map((tag?) => (
+          {post.tags?.map((tag?) => (
             <span key={tag.slug}>
               <Link href={`/tag/${tag.slug}`}>
                 <a>{tag.title}</a>
