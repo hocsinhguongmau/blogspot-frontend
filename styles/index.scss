@@ -18,7 +18,7 @@
       @extend .maven;
     }
     &__title {
-      @apply text-xl md:text-4xl font-bold mt-4;
+      @apply text-xl md:text-4xl lg:text-3xl xl:text-4xl font-bold mt-4;
       @extend .maven;
       @extend .text-hover;
     }
@@ -51,12 +51,12 @@
       }
     }
     &__title {
-      @apply text-2xl font-semibold mt-4;
+      @apply text-xl xl:text-2xl font-semibold mt-4;
       @extend .text-hover;
       @extend .maven;
     }
     &__description {
-      @apply mt-8 leading-7;
+      @apply mt-4 xl:mt-8 leading-7;
       @extend .ellipsis-three;
     }
   }

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useQuery, UseQueryResult } from 'react-query'
 import { categoryType, tagType } from '../lib/interfaces/PostsType'
 import { getCategory, getTag } from '../queries'
+import Loading from './Loading'
 
 type startEnd = {
   start: number
@@ -50,7 +51,7 @@ export const CategoryLinks = ({ start, end }: startEnd): ReactElement => {
     Error
   >('categorylinks', () => getCategory(start, end))
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
   if (isError) {
     return <div>Error! {error?.message}</div>

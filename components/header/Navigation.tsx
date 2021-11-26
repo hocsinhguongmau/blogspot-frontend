@@ -8,7 +8,6 @@ import { CategoryLinks } from '../Links'
 
 export default function Navigation(): ReactElement {
   const [openMenu, setOpenMenu] = useState<boolean>(false)
-  console.log(openMenu)
   const router = useRouter()
   const param = router.query.category_name
   useEffect(() => {
