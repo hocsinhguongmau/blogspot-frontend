@@ -90,6 +90,12 @@
     &__tag {
       @apply text-red-500 uppercase text-sm tracking-widest mt-4;
       @extend .maven;
+      span {
+        @apply ml-4;
+        &:first-child {
+          @apply ml-0;
+        }
+      }
     }
     &__title {
       @apply text-xl font-semibold mt-4;
