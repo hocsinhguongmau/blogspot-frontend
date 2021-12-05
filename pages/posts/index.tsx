@@ -31,7 +31,7 @@ const PostPage = ({ posts }: Props) => {
   }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
     PostType[] | undefined,
     Error
-  >(['posts', 1], () => getAllPosts(0, postsPerPage), {
+  >(['allPosts', 1], () => getAllPosts(0, postsPerPage), {
     initialData: posts.allPosts,
   })
 

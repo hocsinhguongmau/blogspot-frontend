@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/dist/client/router'
-import { useQuery, UseQueryResult } from 'react-query'
+import { useQuery, useQueryClient, UseQueryResult } from 'react-query'
 import { getPostsByCategory } from '../../../../queries'
 import Pagination from '../../../../components/main/Pagination'
 import Post from '../../../../components/main/Post'
@@ -24,13 +24,13 @@ let start: number,
   end: number = 0
 
 const CategoryPage = ({ posts }: Props) => {
+  const queryClient = useQueryClient()
   const router = useRouter()
   const category = router.query.category_name
-  const page: string | string[] | undefined = router.query.page_index
-  if (typeof page === 'string') {
-    start = (parseInt(page) - 1) * postsPerPage
-    end = parseInt(page) * postsPerPage - 1
-  }
+  const page: number = parseInt(router.query.page_index as string)
+
+  start = (page - 1) * postsPerPage
+  end = page * postsPerPage - 1
   const {
     isLoading,
     isError,
@@ -47,6 +47,20 @@ const CategoryPage = ({ posts }: Props) => {
     },
   )
   const numberOfPosts = posts.statics.numberOfPosts
+
+  useEffect(() => {
+    if (numberOfPosts && postsPerPage * page < numberOfPosts) {
+      queryClient.prefetchQuery<PostType[] | undefined, Error>(
+        [`postsByCategory_${category}`, page + 1],
+        () =>
+          getPostsByCategory(
+            category,
+            page * postsPerPage,
+            (page + 1) * postsPerPage,
+          ),
+      )
+    }
+  }, [data, page, queryClient])
   if (isLoading) {
     return <Loading />
   }
@@ -86,9 +100,9 @@ const CategoryPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {typeof page === 'string' && numberOfPosts > postsPerPage ? (
+            {numberOfPosts > postsPerPage ? (
               <Pagination
-                currentPage={parseInt(page)}
+                currentPage={page}
                 numberOfPosts={numberOfPosts}
                 postsPerPage={postsPerPage}
                 maxPages={5}
@@ -109,11 +123,9 @@ const CategoryPage = ({ posts }: Props) => {
 export const getServerSideProps: GetServerSideProps = async ({
   query,
 }: GetServerSidePropsContext) => {
-  const page: string | string[] | undefined = query.page_index
-  if (typeof page === 'string') {
-    start = (parseInt(page) - 1) * postsPerPage
-    end = parseInt(page) * postsPerPage
-  }
+  const page: number = parseInt(query.page_index as string)
+  start = (page - 1) * postsPerPage
+  end = page * postsPerPage
   const posts = await getPostsByCategory(query?.category_name, start, end)
 
   return { props: { posts: posts } }

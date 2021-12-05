@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
 import { GetStaticProps, GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/dist/client/router'
-import { useQuery, UseQueryResult } from 'react-query'
+import {
+  QueryClient,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from 'react-query'
 import { PostType } from '../../../lib/interfaces/PostsType'
 import { getCategory, getPostsByCategory } from '../../../queries'
 import Post from '../../../components/main/Post'
@@ -11,7 +16,7 @@ import Loading from '../../../components/Loading'
 import NotFound from '../../../components/main/NotFound'
 
 const postsPerPage = 4
-const page = '1'
+const page = 1
 interface Props {
   posts?: {
     posts: PostType[]
@@ -22,6 +27,7 @@ interface Props {
 }
 
 const CategoryPage = ({ posts }: Props) => {
+  const queryClient = useQueryClient()
   const router = useRouter()
   const category = router.query.category_name
   const {
@@ -33,13 +39,28 @@ const CategoryPage = ({ posts }: Props) => {
     PostType[] | undefined,
     Error
   >(
-    [`postsByCategory_${category}`, 1],
+    [`postsByCategory_${category}`, page],
     () => getPostsByCategory(category, 0, postsPerPage),
     {
       initialData: posts?.posts,
     },
   )
   const numberOfPosts = posts?.statics.numberOfPosts
+
+  useEffect(() => {
+    if (numberOfPosts && postsPerPage * page < numberOfPosts) {
+      queryClient.prefetchQuery<PostType[] | undefined, Error>(
+        [`postsByCategory_${category}`, page + 1],
+        () =>
+          getPostsByCategory(
+            category,
+            page * postsPerPage,
+            (page + 1) * postsPerPage,
+          ),
+      )
+    }
+  }, [data, page, queryClient])
+
   if (isLoading) {
     return <Loading />
   }
@@ -79,9 +100,9 @@ const CategoryPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {typeof page === 'string' && numberOfPosts! > postsPerPage ? (
+            {numberOfPosts! > postsPerPage ? (
               <Pagination
-                currentPage={parseInt(page)}
+                currentPage={page}
                 numberOfPosts={numberOfPosts!}
                 postsPerPage={postsPerPage}
                 maxPages={5}
