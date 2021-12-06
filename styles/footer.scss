@@ -9,7 +9,6 @@
   }
   &__title {
     @apply text-white text-xl font-bold mb-6 mt-8 md:mt-2 capitalize;
-    @extend .maven;
   }
   &__col {
     li {

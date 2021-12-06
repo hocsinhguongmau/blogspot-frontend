@@ -15,11 +15,10 @@
     }
     &__tag {
       @apply text-red-500 mt-8 uppercase text-sm tracking-widest;
-      @extend .maven;
     }
     &__title {
       @apply text-xl md:text-4xl lg:text-3xl xl:text-4xl font-bold mt-4;
-      @extend .maven;
+
       @extend .text-hover;
     }
     &__description {
@@ -42,7 +41,7 @@
     }
     &__tag {
       @apply text-red-500 text-xs uppercase tracking-widest mt-6 md:mt-0;
-      @extend .maven;
+
       span {
         @apply ml-4 inline-block;
         &:first-child {
@@ -53,7 +52,6 @@
     &__title {
       @apply text-xl xl:text-2xl font-semibold mt-4;
       @extend .text-hover;
-      @extend .maven;
     }
     &__description {
       @apply mt-4 xl:mt-8 leading-7;
@@ -73,11 +71,9 @@
 
   &__title {
     @apply text-2xl md:text-3xl lg:text-5xl font-bold capitalize md:float-left;
-    @extend .maven;
   }
   &__category {
     @apply md:float-right text-sm uppercase text-red-500 mt-3 lg:mt-4 lg:pr-10 block;
-    @extend .maven;
   }
   &__wrapper {
     @apply clear-both md:grid md:gap-8 md:grid-cols-2 lg:grid-cols-4 w-full  lg:w-11/12 pt-2 lg:pt-0;
@@ -89,7 +85,7 @@
     }
     &__tag {
       @apply text-red-500 uppercase text-sm tracking-widest mt-4;
-      @extend .maven;
+
       span {
         @apply ml-4;
         &:first-child {
@@ -99,7 +95,7 @@
     }
     &__title {
       @apply text-xl font-semibold mt-4;
-      @extend .maven;
+
       @extend .text-hover;
     }
     &__description {
@@ -118,7 +114,6 @@
   }
   &__title {
     @apply pt-10 text-3xl lg:text-5xl font-bold;
-    @extend .maven;
   }
   &__description {
     @apply my-4 lg:my-8;

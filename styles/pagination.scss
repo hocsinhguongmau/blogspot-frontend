@@ -4,7 +4,7 @@
     li {
       a {
         @apply inline-block  px-2 md:px-3 py-2  text-sm transition-all duration-300;
-        @extend .maven;
+
         &:hover {
           @apply bg-gray-200;
         }

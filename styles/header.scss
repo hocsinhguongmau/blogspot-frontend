@@ -43,7 +43,7 @@
       @apply inline-block mx-4;
       a {
         @apply uppercase text-xs font-medium;
-        @extend .maven;
+
         @extend .text-hover;
       }
     }
