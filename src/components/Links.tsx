@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
 import Link from 'next/link'
 import { useQuery, UseQueryResult } from 'react-query'
-import { categoryType, tagType } from '../lib/interfaces/PostsType'
-import { getCategory, getTag } from '../queries'
+import { categoryType, tagType } from '@lib/interfaces/PostsType'
+import { getCategory, getTag } from 'queries'
 import Loading from './Loading'
 
 type startEnd = {

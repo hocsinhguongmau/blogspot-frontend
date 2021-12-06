@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Social from '../header/Social'
+import Social from '@components/header/Social'
 import { CategoryLinks, TagLinks } from '../Links'
 
 export default function Footer(): ReactElement {

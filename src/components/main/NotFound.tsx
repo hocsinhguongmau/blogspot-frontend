@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import Search from '../header/Search'
+import Search from '@components/header/Search'
 
 const NotFound = () => (
   <>

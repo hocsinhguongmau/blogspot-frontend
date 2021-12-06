@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react'
 import Image from 'next/image'
 import { useNextSanityImage } from 'next-sanity-image'
 import Link from 'next/link'
-import { PostType, RelatedPostType } from '../../lib/interfaces/PostsType'
-import { client } from '../../queries'
+import { PostType, RelatedPostType } from '@lib/interfaces/PostsType'
+import { client } from 'queries'
 
 interface Props {
   classes: string

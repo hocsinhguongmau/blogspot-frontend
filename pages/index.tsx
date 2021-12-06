@@ -3,14 +3,14 @@ import React from 'react'
 import type { GetStaticProps } from 'next'
 import { useQuery, UseQueryResult } from 'react-query'
 import Head from 'next/head'
-import NewPosts from '../components/main/NewPosts'
-import RecentPosts from '../components/main/RecentPosts'
-import PopularPosts from '../components/main/PopularPosts'
+import NewPosts from '@components/main/NewPosts'
+import RecentPosts from '@components/main/RecentPosts'
+import PopularPosts from '@components/main/PopularPosts'
 
-import { getPosts } from '../queries'
-import { PostsType } from '../lib/interfaces/PostsType'
-import Loading from '../components/Loading'
-import NotFound from '../components/main/NotFound'
+import { getPosts } from 'queries'
+import { PostsType } from '@lib/interfaces/PostsType'
+import Loading from '@components/Loading'
+import NotFound from '@components/main/NotFound'
 
 export interface InitialDataProps {
   posts: PostsType

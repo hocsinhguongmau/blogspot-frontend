@@ -2,17 +2,17 @@ import React, { ReactElement } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 const BlockContent = require('@sanity/block-content-to-react')
-import RelatedPost from '../../components/main/RelatedPost'
+import RelatedPost from '@components/main/RelatedPost'
 import getYouTubeId from 'get-youtube-id'
 import YouTube from 'react-youtube'
 
 import { GetStaticProps, GetStaticPropsContext } from 'next'
-import { client, getAllSlugs, getSinglePost } from '../../queries'
+import { client, getAllSlugs, getSinglePost } from 'queries'
 import { useQuery, UseQueryResult } from 'react-query'
-import { PostType, RelatedPostType } from '../../lib/interfaces/PostsType'
+import { PostType, RelatedPostType } from '@lib/interfaces/PostsType'
 import { useRouter } from 'next/dist/client/router'
 import { useNextSanityImage } from 'next-sanity-image'
-import NotFound from '../../components/main/NotFound'
+import NotFound from '@components/main/NotFound'
 
 interface AppProps {
   post: PostType | undefined

@@ -3,8 +3,8 @@ import type { AppProps } from 'next/app'
 import { QueryClientProvider, QueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
-import '../styles/globals.scss'
-import Layout from '../components/Layout'
+import '@styles/globals.scss'
+import Layout from '@components/Layout'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(

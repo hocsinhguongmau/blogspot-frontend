@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
-import { PostType } from '../../lib/interfaces/PostsType'
-import Post from './Post'
+import { PostType } from '@lib/interfaces/PostsType'
+import Post from '@components/main/Post'
 
 type AppProps = {
   posts: PostType[]

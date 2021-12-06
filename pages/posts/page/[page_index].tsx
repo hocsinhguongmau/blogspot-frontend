@@ -1,14 +1,14 @@
 import React from 'react'
 import Head from 'next/head'
-import Post from '../../../components/main/Post'
-import { PostType } from '../../../lib/interfaces/PostsType'
+import Post from '@components/main/Post'
+import { PostType } from '@lib/interfaces/PostsType'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import Pagination from '../../../components/main/Pagination'
-import { getAllPosts } from '../../../queries'
+import Pagination from '@components/main/Pagination'
+import { getAllPosts } from 'queries'
 import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
-import Loading from '../../../components/Loading'
-import NotFound from '../../../components/main/NotFound'
+import Loading from '@components/Loading'
+import NotFound from '@components/main/NotFound'
 
 interface Props {
   posts: {

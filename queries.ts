@@ -5,7 +5,7 @@ import {
   categoryType,
   authorType,
   tagType,
-} from './lib/interfaces/PostsType'
+} from '@lib/interfaces/PostsType'
 
 export const client = sanityClient({
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,

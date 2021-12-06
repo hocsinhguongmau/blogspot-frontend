@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Search from './Search'
-import Social from './Social'
-import Navigation from './Navigation'
+import Search from '@components/header/Search'
+import Social from '@components/header/Social'
+import Navigation from '@components/header/Navigation'
 
 export default function Header(): ReactElement {
   return (

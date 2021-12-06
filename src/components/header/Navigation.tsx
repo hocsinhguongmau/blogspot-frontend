@@ -4,7 +4,7 @@ import { CgClose } from '@react-icons/all-files/cg/CgClose'
 import { GiHamburgerMenu } from '@react-icons/all-files/gi/GiHamburgerMenu'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CategoryLinks } from '../Links'
+import { CategoryLinks } from '@components/Links'
 
 export default function Navigation(): ReactElement {
   const [openMenu, setOpenMenu] = useState<boolean>(false)

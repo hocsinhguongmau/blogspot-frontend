@@ -3,12 +3,12 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import React from 'react'
 import { useQuery, UseQueryResult } from 'react-query'
-import { PostType } from '../../lib/interfaces/PostsType'
-import { searchByQuery } from '../../queries'
-import Post from '../../components/main/Post'
-import Pagination from '../../components/main/Pagination'
-import Loading from '../../components/Loading'
-import NotFound from '../../components/main/NotFound'
+import { PostType } from '@lib/interfaces/PostsType'
+import { searchByQuery } from 'queries'
+import Post from '@components/main/Post'
+import Pagination from '@components/main/Pagination'
+import Loading from '@components/Loading'
+import NotFound from '@components/main/NotFound'
 
 interface Props {
   posts: {

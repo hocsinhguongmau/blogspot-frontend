@@ -3,12 +3,12 @@ import Head from 'next/head'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
-import { getPostsByTag } from '../../../../queries'
-import Pagination from '../../../../components/main/Pagination'
-import Post from '../../../../components/main/Post'
-import { PostType } from '../../../../lib/interfaces/PostsType'
-import Loading from '../../../../components/Loading'
-import NotFound from '../../../../components/main/NotFound'
+import { getPostsByTag } from 'queries'
+import Pagination from '@components/main/Pagination'
+import Post from '@components/main/Post'
+import { PostType } from '@lib/interfaces/PostsType'
+import Loading from '@components/Loading'
+import NotFound from '@components/main/NotFound'
 
 const postsPerPage = 4
 interface Props {

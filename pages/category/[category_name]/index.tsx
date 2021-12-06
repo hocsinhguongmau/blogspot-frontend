@@ -8,12 +8,12 @@ import {
   useQueryClient,
   UseQueryResult,
 } from 'react-query'
-import { PostType } from '../../../lib/interfaces/PostsType'
-import { getCategory, getPostsByCategory } from '../../../queries'
-import Post from '../../../components/main/Post'
-import Pagination from '../../../components/main/Pagination'
-import Loading from '../../../components/Loading'
-import NotFound from '../../../components/main/NotFound'
+import { PostType } from '@lib/interfaces/PostsType'
+import { getCategory, getPostsByCategory } from 'queries'
+import Post from '@components/main/Post'
+import Pagination from '@components/main/Pagination'
+import Loading from '@components/Loading'
+import NotFound from '@components/main/NotFound'
 
 const postsPerPage = 4
 const page = 1
