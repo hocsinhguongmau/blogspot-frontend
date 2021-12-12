@@ -11,7 +11,7 @@ const NotFound = () => (
     <div className='container'>
       <div className='notfound'>
         <h1 className='post__title'>Article not found</h1>
-        <p className='notfound__description'>
+        <p className='notfound__description mt-10'>
           Try your search again or search for something else.
         </p>
         <div className='notfound__searchbox'>
