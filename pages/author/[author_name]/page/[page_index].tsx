@@ -6,48 +6,38 @@ import { useQuery, UseQueryResult } from 'react-query'
 import { getPostsByAuthor } from 'queries'
 import Pagination from '@components/main/Pagination'
 import Post from '@components/main/Post'
-import { authorType, PostType } from '@lib/interfaces/PostsType'
+import { AuthorPageType, authorType, PostType } from '@lib/interfaces/PostsType'
 import Loading from '@components/Loading'
 import NotFound from '@components/main/NotFound'
+import PostTitle from '@components/PostTitle'
 
 const postsPerPage = 4
-interface Props {
-  posts: {
-    author: authorType
-    posts: PostType[]
-    statics: {
-      numberOfPosts: number
-    }
-  }
-}
 
 let start: number,
   end: number = 0
 
-const AuthorPage = ({ posts }: Props) => {
+const AuthorPage = (props: AuthorPageType) => {
   const router = useRouter()
-  const author = router.query.author_name
-  const page: string | string[] | undefined = router.query.page_index
-  if (typeof page === 'string') {
-    start = (parseInt(page) - 1) * postsPerPage
-    end = parseInt(page) * postsPerPage - 1
-  }
+  const author = router.query.author_name as string
+  const page: string = router.query.page_index as string
+  start = (parseInt(page) - 1) * postsPerPage
+  end = parseInt(page) * postsPerPage - 1
   const {
     isLoading,
     isError,
     error,
     data,
-  }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
-    PostType[] | undefined,
+  }: UseQueryResult<AuthorPageType | undefined, Error> = useQuery<
+    AuthorPageType | undefined,
     Error
   >(
     [`postsByAuthor_${author}`, page],
     () => getPostsByAuthor(author, start, end),
     {
-      initialData: posts.posts,
+      initialData: props,
     },
   )
-  const numberOfPosts = posts.statics.numberOfPosts
+
   if (isLoading) {
     return <Loading />
   }
@@ -67,17 +57,17 @@ const AuthorPage = ({ posts }: Props) => {
       </>
     )
   } else {
+    const numberOfPosts = data.numberOfPosts
     return (
       <>
         <Head>
-          <title>
-            {numberOfPosts > postsPerPage ? `Posts page ${page}` : 'Post'}
-          </title>
+          <title>Posts by {data.author.name}</title>
         </Head>
         <div className='posts'>
           <div className='container'>
+            <PostTitle author={true} string={data.author.name} />
             <div className='posts__wrapper'>
-              {data.map((post: PostType) => (
+              {data.posts.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}
@@ -87,13 +77,13 @@ const AuthorPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {typeof page === 'string' && numberOfPosts > postsPerPage ? (
+            {numberOfPosts > postsPerPage ? (
               <Pagination
                 currentPage={parseInt(page)}
                 numberOfPosts={numberOfPosts}
                 postsPerPage={postsPerPage}
                 maxPages={5}
-                urlName={typeof author === 'string' ? `author/${author}` : ''}
+                urlName={`author/${author}`}
               />
             ) : (
               ''
@@ -108,14 +98,16 @@ const AuthorPage = ({ posts }: Props) => {
 export const getServerSideProps: GetServerSideProps = async ({
   query,
 }: GetServerSidePropsContext) => {
-  const page: string | string[] | undefined = query.page_index
-  if (typeof page === 'string') {
-    start = (parseInt(page) - 1) * postsPerPage
-    end = parseInt(page) * postsPerPage
+  const page: string = query.page_index as string
+  start = (parseInt(page) - 1) * postsPerPage
+  end = parseInt(page) * postsPerPage
+  const data = await getPostsByAuthor(query?.author_name as string, start, end)
+  if (!data?.posts.length) {
+    return {
+      notFound: true,
+    }
   }
-  const posts = await getPostsByAuthor(query?.author_name, start, end)
-
-  return { props: { posts: posts } }
+  return { props: data }
 }
 
 export default AuthorPage

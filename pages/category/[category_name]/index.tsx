@@ -2,64 +2,37 @@ import React, { useEffect } from 'react'
 import Head from 'next/head'
 import { GetStaticProps, GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/dist/client/router'
-import {
-  QueryClient,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from 'react-query'
-import { PostType } from '@lib/interfaces/PostsType'
+import { useQuery, useQueryClient, UseQueryResult } from 'react-query'
+import { PostPageType, PostType } from '@lib/interfaces/PostsType'
 import { getCategory, getPostsByCategory } from 'queries'
 import Post from '@components/main/Post'
 import Pagination from '@components/main/Pagination'
 import Loading from '@components/Loading'
 import NotFound from '@components/main/NotFound'
+import PostTitle from '@components/PostTitle'
 
 const postsPerPage = 4
 const page = 1
-interface Props {
-  posts?: {
-    posts: PostType[]
-    statics: {
-      numberOfPosts: number
-    }
-  }
-}
 
-const CategoryPage = ({ posts }: Props) => {
+const CategoryPage = (props: PostPageType) => {
   const queryClient = useQueryClient()
   const router = useRouter()
-  const category = router.query.category_name
+  const category = router.query.category_name as string
   const {
     isLoading,
     isError,
     error,
     data,
-  }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
-    PostType[] | undefined,
+  }: UseQueryResult<PostPageType | undefined, Error> = useQuery<
+    PostPageType | undefined,
     Error
   >(
     [`postsByCategory_${category}`, page],
     () => getPostsByCategory(category, 0, postsPerPage),
     {
-      initialData: posts?.posts,
+      initialData: props,
     },
   )
-  const numberOfPosts = posts?.statics.numberOfPosts
-
-  useEffect(() => {
-    if (numberOfPosts && postsPerPage * page < numberOfPosts) {
-      queryClient.prefetchQuery<PostType[] | undefined, Error>(
-        [`postsByCategory_${category}`, page + 1],
-        () =>
-          getPostsByCategory(
-            category,
-            page * postsPerPage,
-            (page + 1) * postsPerPage,
-          ),
-      )
-    }
-  }, [data, page, queryClient])
 
   if (isLoading) {
     return <Loading />
@@ -80,17 +53,31 @@ const CategoryPage = ({ posts }: Props) => {
       </>
     )
   } else {
+    const numberOfPosts = data.numberOfPosts
+    useEffect(() => {
+      if (numberOfPosts && postsPerPage * page < numberOfPosts) {
+        queryClient.prefetchQuery<PostPageType | undefined, Error>(
+          [`postsByCategory_${category}`, page + 1],
+          () =>
+            getPostsByCategory(
+              category,
+              page * postsPerPage,
+              (page + 1) * postsPerPage,
+            ),
+        )
+      }
+    }, [data, page, queryClient])
+
     return (
       <>
         <Head>
-          <title>
-            {numberOfPosts! > postsPerPage ? `Posts page ${page}` : 'Post'}
-          </title>
+          <title>Posts in {data.title?.title}</title>
         </Head>
         <div className='posts'>
           <div className='container'>
+            <PostTitle string={data.title?.title} />
             <div className='posts__wrapper'>
-              {data.map((post: PostType) => (
+              {data.posts.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}
@@ -100,15 +87,13 @@ const CategoryPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {numberOfPosts! > postsPerPage ? (
+            {numberOfPosts > postsPerPage ? (
               <Pagination
                 currentPage={page}
                 numberOfPosts={numberOfPosts!}
                 postsPerPage={postsPerPage}
                 maxPages={5}
-                urlName={
-                  typeof category === 'string' ? `category/${category}` : ''
-                }
+                urlName={`category/${category}`}
               />
             ) : (
               ''
@@ -123,9 +108,14 @@ const CategoryPage = ({ posts }: Props) => {
 export const getStaticProps: GetStaticProps = async ({
   params,
 }: GetStaticPropsContext) => {
-  const posts = await getPostsByCategory(params?.category_name, 0, postsPerPage)
-
-  return { props: { posts: posts } }
+  const query = params?.category_name as string
+  const data = await getPostsByCategory(query, 0, postsPerPage)
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }
+  return { props: data }
 }
 
 export const getStaticPaths = async () => {
@@ -137,7 +127,7 @@ export const getStaticPaths = async () => {
   }))
   return {
     paths,
-    fallback: true,
+    fallback: false,
   }
 }
 

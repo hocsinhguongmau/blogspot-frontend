@@ -5,6 +5,8 @@ import {
   categoryType,
   authorType,
   tagType,
+  PostPageType,
+  AuthorPageType,
 } from '@lib/interfaces/PostsType'
 
 export const client = sanityClient({
@@ -34,52 +36,40 @@ export const getSinglePost = async (
 }
 
 export const getPostsByCategory = async (
-  category: string | string[] | undefined,
+  category: string,
   start: number,
   end: number,
-): Promise<PostType[] | undefined> => {
-  if (typeof category === 'string') {
-    const url = encodeURIComponent(category)
-    const query = `{"posts":*[_type == "post" && "${url}" in categories[]->slug.current]${postResults}[${start}...${end}],"statics":{"numberOfPosts":count(*[_type == "post" && "${url}" in categories[]->slug.current])}}`
-    return await client.fetch(query)
-  } else {
-    return
-  }
+): Promise<PostPageType | undefined> => {
+  const url = encodeURIComponent(category)
+  const query = `{"posts":*[_type == "post" && "${url}" in categories[]->slug.current]${postResults}[${start}...${end}], "numberOfPosts":count(*[_type == "post" && "${url}" in categories[]->slug.current]), "title": *[_type=="category" && slug.current == "${url}"][0]{title}}`
+  return await client.fetch(query)
 }
 
 export const getAllPosts = async (
   start: number,
   end: number,
-): Promise<PostType[] | undefined> => {
-  const query = `{"allPosts":*[_type == "post"]${postResults}[${start}...${end}],"statics":{"numberOfPosts":count(*[_type == "post"])}}`
+): Promise<PostPageType | undefined> => {
+  const query = `{"posts":*[_type == "post"]${postResults}[${start}...${end}],"numberOfPosts":count(*[_type == "post"])}`
   return await client.fetch(query)
 }
 export const getPostsByTag = async (
-  tag: string | string[] | undefined,
+  tag: string,
   start: number,
   end: number,
-): Promise<PostType[] | undefined> => {
-  if (typeof tag === 'string') {
-    const url = encodeURIComponent(tag)
-    const query = `{"posts":*[_type == "post" && "${url}" in tags[]->slug.current]${postResults}[${start}...${end}],"statics":{"numberOfPosts":count(*[_type == "post" && "${url}" in tags[]->slug.current])}}`
-    return await client.fetch(query)
-  } else {
-    return
-  }
+): Promise<PostPageType | undefined> => {
+  const url = encodeURIComponent(tag)
+  const query = `{"posts":*[_type == "post" && "${url}" in tags[]->slug.current]${postResults}[${start}...${end}], "numberOfPosts":count(*[_type == "post" && "${url}" in tags[]->slug.current]), "title": *[_type=="tag" && slug.current == "${url}"][0]{title}}`
+  return await client.fetch(query)
 }
 
 export const getPostsByAuthor = async (
-  name: string | string[] | undefined,
+  name: string,
   start: number,
   end: number,
-): Promise<PostType[] | undefined> => {
-  if (typeof name === 'string') {
-    const url = encodeURIComponent(name)
-    const query = `{"author":*[_type=="author" && "${url}" match slug.current]{name,"slug":slug.current,bio},"posts":*[_type == "post" && author._ref in *[_type=="author" && slug.current=="${url}"]._id]${postResults}[${start}...${end}],"statics":{"numberOfPosts":count(*[_type == "post" && "${url}" match author->slug.current])}}`
-    return await client.fetch(query)
-  } else {
-    return
-  }
+): Promise<AuthorPageType | undefined> => {
+  const url = encodeURIComponent(name)
+  const query = `{"author":*[_type=="author" && "${url}" match slug.current][0]{name,"slug":slug.current,bio},"posts":*[_type == "post" && author._ref in *[_type=="author" && slug.current=="${url}"]._id]${postResults}[${start}...${end}],"numberOfPosts":count(*[_type == "post" && "${url}" match author->slug.current])}`
+  return await client.fetch(query)
 }
 
 export const getPosts = async (): Promise<PostsType> =>
@@ -112,12 +102,12 @@ export const getAllSlugs = async (): Promise<IdType[]> =>
   await client.fetch(`*[_type == "post"]{"slug": slug.current}`)
 
 export const searchByQuery = async (
-  query: string | string[] | undefined,
+  query: string,
   start: number,
   end: number,
-): Promise<PostType[]> =>
+): Promise<PostPageType> =>
   await client.fetch(
-    `{"posts":*[(_type=="post" && title match "${query}") || body[].children[].text match "${query}" || _type=="post" && categories[]->slug.current match "${query}"|| _type=="post" && tags[]->slug.current match "${query}"]${postResults}[${start}...${end}],"statics":{"numberOfPosts":count(*[title match "${query}" || body[].children[].text match "${query}" || (_type=="post" && categories[]->slug.current match "${query}")|| (_type=="post" && tags[]->slug.current match "${query}")])}}`,
+    `{"posts":*[(_type=="post" && title match "${query}") || body[].children[].text match "${query}" || _type=="post" && categories[]->slug.current match "${query}"|| _type=="post" && tags[]->slug.current match "${query}"]${postResults}[${start}...${end}],"numberOfPosts":count(*[title match "${query}" || body[].children[].text match "${query}" || (_type=="post" && categories[]->slug.current match "${query}")|| (_type=="post" && tags[]->slug.current match "${query}")])}`,
   )
 
 const postResults = `{"id":_id,title,description,"createdAt":_createdAt,"author":author->{name,"slug":slug.current},"categories": categories[]->{ "title": title, "slug": slug.current },"tags":tags[]->{ "title": title, "slug": slug.current },"slug": slug.current,"imageUrl": mainImage.asset._ref,body}`

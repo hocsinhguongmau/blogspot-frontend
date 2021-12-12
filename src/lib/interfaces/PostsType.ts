@@ -21,7 +21,7 @@ export type RelatedPostType = {
 export type authorType = {
   slug: string
   name: string
-  body?: Array<object>
+  bio?: Array<object>
 }
 
 export type tagType = {
@@ -38,4 +38,16 @@ export type categoryType = {
 export interface PostsType {
   mainPosts: PostType[]
   popularPosts: PostType[]
+}
+
+export interface PostPageType {
+  posts: PostType[]
+  numberOfPosts: number
+  title?: { title: string }
+}
+
+export interface AuthorPageType {
+  author: authorType
+  posts: PostType[]
+  numberOfPosts: number
 }

@@ -14,6 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           queries: {
             staleTime: 24 * 1000 * 3600,
             refetchOnWindowFocus: false,
+            retry: false,
           },
         },
       }),

@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Post from '@components/main/Post'
-import { PostType } from '@lib/interfaces/PostsType'
+import { PostPageType, PostType } from '@lib/interfaces/PostsType'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Pagination from '@components/main/Pagination'
 import { getAllPosts } from 'queries'
@@ -9,38 +9,29 @@ import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
 import Loading from '@components/Loading'
 import NotFound from '@components/main/NotFound'
-
-interface Props {
-  posts: {
-    allPosts: PostType[]
-    statics: {
-      numberOfPosts: number
-    }
-  }
-}
+import PostTitle from '@components/PostTitle'
 
 const postsPerPage = 4
 let start: number,
   end: number = 0
 
-const PostPage = ({ posts }: Props) => {
+const PostPage = (props: PostPageType) => {
   const router = useRouter()
-  const page: string | string[] | undefined = router.query.page_index
+  const page: string = router.query.page_index as string
 
-  if (typeof page === 'string') {
-    start = (parseInt(page) - 1) * postsPerPage
-    end = parseInt(page) * postsPerPage - 1
-  }
+  start = (parseInt(page) - 1) * postsPerPage
+  end = parseInt(page) * postsPerPage - 1
+
   const {
     isLoading,
     isError,
     error,
     data,
-  }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
-    PostType[] | undefined,
+  }: UseQueryResult<PostPageType | undefined, Error> = useQuery<
+    PostPageType | undefined,
     Error
   >(['allPosts', page], () => getAllPosts(start, end), {
-    initialData: posts.allPosts,
+    initialData: props,
   })
 
   if (isLoading) {
@@ -55,15 +46,17 @@ const PostPage = ({ posts }: Props) => {
     )
   }
   if (data) {
+    const numberOfPosts = data.numberOfPosts
     return (
       <>
         <Head>
-          <title>Posts page {page}</title>
+          <title>All posts</title>
         </Head>
         <div className='posts'>
           <div className='container'>
+            <PostTitle string='All posts' />
             <div className='posts__wrapper'>
-              {posts.allPosts.map((post: PostType) => (
+              {data.posts.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}
@@ -73,10 +66,10 @@ const PostPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {typeof page === 'string' ? (
+            {numberOfPosts > postsPerPage ? (
               <Pagination
                 currentPage={parseInt(page)}
-                numberOfPosts={posts.statics.numberOfPosts}
+                numberOfPosts={numberOfPosts}
                 postsPerPage={postsPerPage}
                 maxPages={5}
                 urlName={'posts'}
@@ -96,14 +89,17 @@ const PostPage = ({ posts }: Props) => {
 export const getServerSideProps: GetServerSideProps = async ({
   query,
 }: GetServerSidePropsContext) => {
-  const page: string | string[] | undefined = query.page_index
+  const page: string = query.page_index as string
 
-  if (typeof page === 'string') {
-    start = (parseInt(page) - 1) * postsPerPage
-    end = parseInt(page) * postsPerPage
+  start = (parseInt(page) - 1) * postsPerPage
+  end = parseInt(page) * postsPerPage
+  const data = await getAllPosts(start, end)
+  if (!data?.posts.length) {
+    return {
+      notFound: true,
+    }
   }
-  const posts = await getAllPosts(start, end)
-  return { props: { posts: posts } }
+  return { props: data }
 }
 
 export default PostPage

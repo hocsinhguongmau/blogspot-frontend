@@ -14,9 +14,6 @@ import { useRouter } from 'next/dist/client/router'
 import { useNextSanityImage } from 'next-sanity-image'
 import NotFound from '@components/main/NotFound'
 
-interface AppProps {
-  post: PostType | undefined
-}
 type linksType = {
   mark: { blank: boolean; href: string }
   children: HTMLElement
@@ -78,7 +75,7 @@ const serializers = {
   },
 }
 
-const PostPage = ({ post }: AppProps) => {
+const PostPage = (props: PostType) => {
   const router = useRouter()
   const slug = router.query.slug
   const {
@@ -90,7 +87,7 @@ const PostPage = ({ post }: AppProps) => {
     PostType | undefined,
     Error
   >(['post', slug], () => getSinglePost(slug), {
-    initialData: post,
+    initialData: props,
   })
 
   if (isLoading) {
@@ -112,75 +109,79 @@ const PostPage = ({ post }: AppProps) => {
   if (!data) {
     return <NotFound />
   } else {
-    const imageProps = useNextSanityImage(client, data.imageUrl)
-    return (
-      <>
-        <Head>
-          <title>{data.title}</title>
-        </Head>
-        <div className='post'>
-          <div
-            className='breadcrumbs'
-            style={{ backgroundImage: `url('${imageProps.src}')` }}>
-            <div className='breadcrumbs__content'>
-              <p>
-                <span className='post__category'>
-                  {data.categories.map((category) => (
-                    <Link
-                      href={`/category/${category.slug}`}
-                      key={category.slug}>
-                      <a>{category.title}</a>
-                    </Link>
-                  ))}
-                </span>
-                <span className='post__tag'>
-                  {data.tags.map((tag) => (
-                    <Link href={`/tag/${tag.slug}`} key={tag.slug}>
-                      <a>#{tag.title}</a>
-                    </Link>
-                  ))}
-                </span>
-              </p>
-              <h1 className='post__title'>{data.title}</h1>
-              <p className='post__date'>
-                {data.createdAt.slice(0, 10).toUpperCase()} |
-                <Link href={`/author/${data.author.slug}`}>
-                  <a>{data.author.name.toUpperCase()}</a>
-                </Link>
-              </p>
-            </div>
-          </div>
-          <div className='container'>
-            <article className='post__content'>
-              <BlockContent
-                blocks={data.body}
-                imageOptions={{ w: 640, fit: 'max' }}
-                projectId={process.env.NEXT_PUBLIC_PROJECT_ID}
-                dataset={process.env.NEXT_PUBLIC_DATASET}
-                serializers={serializers}
-              />
-            </article>
-          </div>
-          <section className='recent-posts'>
-            <div className='container'>
-              <h2 className='recent-posts__title'>Related posts</h2>
-              <div className='recent-posts__wrapper'>
-                {data.categories.map((category) =>
-                  category.relatedPosts.map((post: RelatedPostType) => (
-                    <RelatedPost
-                      post={post}
-                      key={post.id}
-                      classes='recent-posts__item'
-                      size={[150, 100]}
-                    />
-                  )),
-                )}
+    if (data.id) {
+      const imageProps = useNextSanityImage(client, data.imageUrl)
+      return (
+        <>
+          <Head>
+            <title>{data.title}</title>
+          </Head>
+          <div className='post'>
+            <div
+              className='breadcrumbs'
+              style={{ backgroundImage: `url('${imageProps.src}')` }}>
+              <div className='breadcrumbs__content'>
+                <p>
+                  <span className='post__category'>
+                    {data.categories.map((category) => (
+                      <Link
+                        href={`/category/${category.slug}`}
+                        key={category.slug}>
+                        <a>{category.title}</a>
+                      </Link>
+                    ))}
+                  </span>
+                  <span className='post__tag'>
+                    {data.tags.map((tag) => (
+                      <Link href={`/tag/${tag.slug}`} key={tag.slug}>
+                        <a>#{tag.title}</a>
+                      </Link>
+                    ))}
+                  </span>
+                </p>
+                <h1 className='post__title'>{data.title}</h1>
+                <p className='post__date'>
+                  {data.createdAt.slice(0, 10).toUpperCase()} |
+                  <Link href={`/author/${data.author.slug}`}>
+                    <a>{data.author.name.toUpperCase()}</a>
+                  </Link>
+                </p>
               </div>
             </div>
-          </section>
-        </div>
-      </>
-    )
+            <div className='container'>
+              <article className='post__content'>
+                <BlockContent
+                  blocks={data.body}
+                  imageOptions={{ w: 640, fit: 'max' }}
+                  projectId={process.env.NEXT_PUBLIC_PROJECT_ID}
+                  dataset={process.env.NEXT_PUBLIC_DATASET}
+                  serializers={serializers}
+                />
+              </article>
+            </div>
+            <section className='recent-posts'>
+              <div className='container'>
+                <h2 className='recent-posts__title'>Related posts</h2>
+                <div className='recent-posts__wrapper'>
+                  {data.categories.map((category) =>
+                    category.relatedPosts.map((post: RelatedPostType) => (
+                      <RelatedPost
+                        post={post}
+                        key={post.id}
+                        classes='recent-posts__item'
+                        size={[150, 100]}
+                      />
+                    )),
+                  )}
+                </div>
+              </div>
+            </section>
+          </div>
+        </>
+      )
+    } else {
+      return null
+    }
   }
 }
 
@@ -193,8 +194,14 @@ export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext,
 ) => {
   const { params } = context
-  const post = await getSinglePost(params?.slug)
-  return { props: { post: post } }
+  const data = await getSinglePost(params?.slug)
+  if (!data) {
+    console.log('hmm')
+    return {
+      notFound: true,
+    }
+  }
+  return { props: data }
 }
 
 export const getStaticPaths = async () => {

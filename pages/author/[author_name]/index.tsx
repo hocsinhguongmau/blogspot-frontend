@@ -3,45 +3,36 @@ import Head from 'next/head'
 import { GetStaticProps, GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import { useQuery, UseQueryResult } from 'react-query'
-import { authorType, PostType } from '@lib/interfaces/PostsType'
+import { AuthorPageType, authorType, PostType } from '@lib/interfaces/PostsType'
 import { getAuthor, getPostsByAuthor } from 'queries'
 import Post from '@components/main/Post'
 import Pagination from '@components/main/Pagination'
 import NotFound from '@components/main/NotFound'
 import Loading from '@components/Loading'
+import PostTitle from '@components/PostTitle'
 
 const postsPerPage = 4
 const page = '1'
 
-interface Props {
-  posts: {
-    author: authorType
-    posts: PostType[]
-    statics: {
-      numberOfPosts: number
-    }
-  }
-}
-
-const AuthorPage = ({ posts }: Props) => {
+const AuthorPage = (props: AuthorPageType) => {
   const router = useRouter()
-  const author = router.query.author_name
+  const author = router.query.author_name as string
   const {
     isLoading,
     isError,
     error,
     data,
-  }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
-    PostType[] | undefined,
+  }: UseQueryResult<AuthorPageType | undefined, Error> = useQuery<
+    AuthorPageType | undefined,
     Error
   >(
     [`postsByAuthor_${author}`, 1],
     () => getPostsByAuthor(author, 0, postsPerPage),
     {
-      initialData: posts?.posts,
+      initialData: props,
     },
   )
-  const numberOfPosts = posts?.statics.numberOfPosts
+
   if (isLoading) {
     return <Loading />
   }
@@ -61,17 +52,18 @@ const AuthorPage = ({ posts }: Props) => {
       </>
     )
   } else {
+    console.log(data)
+    const numberOfPosts = data.numberOfPosts
     return (
       <>
         <Head>
-          <title>
-            {numberOfPosts! > postsPerPage ? `Posts page ${page}` : 'Post'}
-          </title>
+          <title>Posts by {data.author.name}</title>
         </Head>
         <div className='posts'>
           <div className='container'>
+            <PostTitle author={true} string={data.author.name} />
             <div className='posts__wrapper'>
-              {data.map((post: PostType) => (
+              {data.posts.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}
@@ -81,13 +73,13 @@ const AuthorPage = ({ posts }: Props) => {
                 />
               ))}
             </div>
-            {typeof page === 'string' && numberOfPosts! > postsPerPage ? (
+            {numberOfPosts > postsPerPage ? (
               <Pagination
                 currentPage={parseInt(page)}
                 numberOfPosts={numberOfPosts!}
                 postsPerPage={postsPerPage}
                 maxPages={5}
-                urlName={typeof author === 'string' ? `author/${author}` : ''}
+                urlName={`author/${author}`}
               />
             ) : (
               ''
@@ -102,9 +94,17 @@ const AuthorPage = ({ posts }: Props) => {
 export const getStaticProps: GetStaticProps = async ({
   params,
 }: GetStaticPropsContext) => {
-  const posts = await getPostsByAuthor(params?.author_name, 0, postsPerPage)
-
-  return { props: { posts: posts } }
+  const data = await getPostsByAuthor(
+    params?.author_name as string,
+    0,
+    postsPerPage,
+  )
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }
+  return { props: data }
 }
 
 export const getStaticPaths = async () => {
@@ -116,7 +116,7 @@ export const getStaticPaths = async () => {
   }))
   return {
     paths,
-    fallback: true,
+    fallback: false,
   }
 }
 

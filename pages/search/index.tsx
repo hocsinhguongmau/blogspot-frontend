@@ -3,39 +3,31 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import React from 'react'
 import { useQuery, UseQueryResult } from 'react-query'
-import { PostType } from '@lib/interfaces/PostsType'
+import { PostPageType, PostType } from '@lib/interfaces/PostsType'
 import { searchByQuery } from 'queries'
 import Post from '@components/main/Post'
 import Pagination from '@components/main/Pagination'
 import Loading from '@components/Loading'
 import NotFound from '@components/main/NotFound'
 
-interface Props {
-  posts: {
-    posts: PostType[]
-    statics: {
-      numberOfPosts: number
-    }
-  }
-}
-
 const postsPerPage = 4
 const page = '1'
-export default function SearchPage({ posts }: Props) {
+
+export default function SearchPage(props: PostPageType) {
   const router = useRouter()
-  const search = router.query.q
+  const search = router.query.q as string
   const {
     isLoading,
     isError,
     error,
     data,
-  }: UseQueryResult<PostType[] | undefined, Error> = useQuery<
-    PostType[] | undefined,
+  }: UseQueryResult<PostPageType | undefined, Error> = useQuery<
+    PostPageType | undefined,
     Error
   >([`search_${search}`, 1], () => searchByQuery(search, 0, postsPerPage), {
-    initialData: posts.posts,
+    initialData: props,
   })
-  const numberOfPosts = posts.statics.numberOfPosts
+  const numberOfPosts = props.numberOfPosts
   if (isLoading) {
     return <Loading />
   }
@@ -48,16 +40,19 @@ export default function SearchPage({ posts }: Props) {
     )
   }
 
-  if (data && data.length > 0) {
+  if (data && data.posts.length > 0) {
     return (
       <>
         <Head>
-          <title>search</title>
+          <title>Search for {search}</title>
         </Head>
         <div className='posts'>
           <div className='container'>
+            <h1 className='text-center text-2xl font-bold'>
+              Search for "{search}"
+            </h1>
             <div className='posts__wrapper'>
-              {data.map((post: PostType) => (
+              {data.posts.map((post: PostType) => (
                 <Post
                   classes='posts__item'
                   key={post.title}
@@ -67,9 +62,7 @@ export default function SearchPage({ posts }: Props) {
                 />
               ))}
             </div>
-            {typeof page === 'string' &&
-            typeof search === 'string' &&
-            numberOfPosts > postsPerPage ? (
+            {numberOfPosts > postsPerPage ? (
               <Pagination
                 currentPage={parseInt(page)}
                 numberOfPosts={numberOfPosts}
@@ -93,6 +86,11 @@ export default function SearchPage({ posts }: Props) {
 export const getServerSideProps: GetServerSideProps = async ({
   query,
 }: GetServerSidePropsContext) => {
-  const posts = await searchByQuery(query?.q, 0, postsPerPage)
-  return { props: { posts: posts } }
+  const data = await searchByQuery(query?.q as string, 0, postsPerPage)
+  if (!data?.posts.length) {
+    return {
+      notFound: true,
+    }
+  }
+  return { props: data }
 }
