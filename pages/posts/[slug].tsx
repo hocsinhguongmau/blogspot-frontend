@@ -119,7 +119,8 @@ const PostPage = (props: PostType) => {
           <div className='post'>
             <div
               className='breadcrumbs'
-              style={{ backgroundImage: `url('${imageProps.src}')` }}>
+              // style={{ backgroundImage: `url('${imageProps.src}')` }}
+            >
               <div className='breadcrumbs__content'>
                 <p>
                   <span className='post__category'>

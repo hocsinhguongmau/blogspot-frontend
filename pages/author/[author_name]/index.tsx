@@ -52,7 +52,6 @@ const AuthorPage = (props: AuthorPageType) => {
       </>
     )
   } else {
-    console.log(data)
     const numberOfPosts = data.numberOfPosts
     return (
       <>
