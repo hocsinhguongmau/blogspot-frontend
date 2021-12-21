@@ -1,4 +1,5 @@
 import sanityClient from '@sanity/client'
+
 import {
   PostType,
   PostsType,
