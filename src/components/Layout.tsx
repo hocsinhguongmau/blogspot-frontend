@@ -1,5 +1,5 @@
-import Header from '@components/header/Header'
-import Footer from '@components/footer/Footer'
+import Header from '@components/header/Header';
+import Footer from '@components/footer/Footer';
 
 const Layout: React.FC = ({ children }) => {
   return (
@@ -8,7 +8,7 @@ const Layout: React.FC = ({ children }) => {
       {children}
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

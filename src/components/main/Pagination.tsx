@@ -1,14 +1,14 @@
-import React, { ReactElement } from 'react'
-import Link from 'next/link'
+import React, { ReactElement } from 'react';
+import Link from 'next/link';
 
 type Props = {
-  currentPage: number
-  numberOfPosts: number
-  postsPerPage: number
-  maxPages: number
-  urlName: string
-  query?: string
-}
+  currentPage: number;
+  numberOfPosts: number;
+  postsPerPage: number;
+  maxPages: number;
+  urlName: string;
+  query?: string;
+};
 
 export default function Pagination({
   currentPage,
@@ -18,57 +18,55 @@ export default function Pagination({
   urlName,
   query,
 }: Props): ReactElement {
-  let totalPages = Math.ceil(numberOfPosts / postsPerPage)
+  let totalPages = Math.ceil(numberOfPosts / postsPerPage);
 
   if (currentPage < 1) {
-    currentPage = 1
+    currentPage = 1;
   } else if (currentPage > totalPages) {
-    currentPage = totalPages
+    currentPage = totalPages;
   }
 
-  let startPage: number, endPage: number
+  let startPage: number, endPage: number;
 
   if (totalPages <= maxPages) {
     // total pages less than max so show all pages
-    startPage = 1
-    endPage = totalPages
+    startPage = 1;
+    endPage = totalPages;
   } else {
     // total pages more than max so calculate start and end pages
-    let maxPagesBeforeCurrentPage = Math.floor(maxPages / 2)
-    let maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1
+    let maxPagesBeforeCurrentPage = Math.floor(maxPages / 2);
+    let maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1;
     if (currentPage <= maxPagesBeforeCurrentPage) {
       // current page near the start
-      startPage = 1
-      endPage = maxPages
+      startPage = 1;
+      endPage = maxPages;
     } else if (currentPage + maxPagesAfterCurrentPage >= totalPages) {
       // current page near the end
-      startPage = totalPages - maxPages + 1
-      endPage = totalPages
+      startPage = totalPages - maxPages + 1;
+      endPage = totalPages;
     } else {
       // current page somewhere in the middle
-      startPage = currentPage - maxPagesBeforeCurrentPage
-      endPage = currentPage + maxPagesAfterCurrentPage
+      startPage = currentPage - maxPagesBeforeCurrentPage;
+      endPage = currentPage + maxPagesAfterCurrentPage;
     }
   }
 
-  const isFirst = currentPage === 1
-  const isLast = currentPage === totalPages
-  let prevPage, nextPage
+  const isFirst = currentPage === 1;
+  const isLast = currentPage === totalPages;
+  let prevPage, nextPage;
   if (query) {
-    prevPage = `/${urlName}/page/${currentPage - 1}?q=${query}`
-    nextPage = `/${urlName}/page/${currentPage + 1}?q=${query}`
+    prevPage = `/${urlName}/page/${currentPage - 1}?q=${query}`;
+    nextPage = `/${urlName}/page/${currentPage + 1}?q=${query}`;
   } else {
-    prevPage = `/${urlName}/page/${currentPage - 1}`
-    nextPage = `/${urlName}/page/${currentPage + 1}`
+    prevPage = `/${urlName}/page/${currentPage - 1}`;
+    nextPage = `/${urlName}/page/${currentPage + 1}`;
   }
 
   // create an array of pages to ng-repeat in the pager control
-  let pages = Array.from(Array(endPage + 1 - startPage).keys()).map(
-    (i) => startPage + i,
-  )
+  let pages = Array.from(Array(endPage + 1 - startPage).keys()).map((i) => startPage + i);
 
   return (
-    <div className='pagination'>
+    <div className="pagination">
       {query ? (
         <ul>
           {!isFirst && (
@@ -102,18 +100,15 @@ export default function Pagination({
                     <a>{page}</a>
                   </Link>
                 </li>
-              )
+              );
             } else {
               return (
                 <li key={page} className={page === currentPage ? 'active' : ''}>
-                  <Link
-                    href={`/${urlName}/page/${page}/${
-                      query ? '?q=' + query : ''
-                    }`}>
+                  <Link href={`/${urlName}/page/${page}/${query ? '?q=' + query : ''}`}>
                     <a>{page}</a>
                   </Link>
                 </li>
-              )
+              );
             }
           })}
 
@@ -125,10 +120,7 @@ export default function Pagination({
                 </Link>
               </li>
               <li>
-                <Link
-                  href={`/search/page/${totalPages.toString()}/${
-                    query ? '?q=' + query : ''
-                  }`}>
+                <Link href={`/search/page/${totalPages.toString()}/${query ? '?q=' + query : ''}`}>
                   <a>Last</a>
                 </Link>
               </li>
@@ -168,7 +160,7 @@ export default function Pagination({
                     <a>{page}</a>
                   </Link>
                 </li>
-              )
+              );
             } else {
               return (
                 <li key={page} className={page === currentPage ? 'active' : ''}>
@@ -176,7 +168,7 @@ export default function Pagination({
                     <a>{page}</a>
                   </Link>
                 </li>
-              )
+              );
             }
           })}
 
@@ -197,5 +189,5 @@ export default function Pagination({
         </ul>
       )}
     </div>
-  )
+  );
 }
